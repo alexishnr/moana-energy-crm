@@ -91,16 +91,16 @@
                     <button type="submit" id="saveButton" class="unique-submit-btn">Mettre à jour le client</button>
                 </form>
                 <div id="clientDetails">
-                    <h2><%= client.nom %> <%= client.prenom %></h2>
-                    <p><strong>Adresse:</strong> <%= client.adresse %>, <%= client.ville %> <%= client.code_postal %></p>
+                    <h2><%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></h2>
+                    <p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %> <%= client.code_postal %></p>
                     <p><strong>Email:</strong> <%= client.email %></p>
                     <p><strong>Téléphone:</strong> <%= client.telephone %></p>
-                    <p><strong>Superficie:</strong> <%= client.superficie %></p>
-                    <p><strong>Type de bâtiment:</strong> <%= client.type_batiment %></p>
-                    <p><strong>Type de rénovation:</strong> <%= client.type_renovation %></p>
-                    <p><strong>Statut fiche client:</strong> <%= client.status %></p>
-                    <p><strong>Statut des travaux:</strong> <%= client.workStatus %></p>
-                    <p><strong>Notes:</strong> <%= client.notes %></p>
+                    <p><strong>Superficie:</strong> <%= client.superficie.charAt(0).toUpperCase() + client.superficie.slice(1) %></p>
+                    <p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
+                    <p><strong>Type de rénovation:</strong> <%= client.type_renovation.charAt(0).toUpperCase() + client.type_renovation.slice(1) %></p>
+                    <p><strong>Statut fiche client:</strong> <%= client.status.charAt(0).toUpperCase() + client.status.slice(1) %></p>
+                    <p><strong>Statut des travaux:</strong> <%= client.workStatus.charAt(0).toUpperCase() + client.workStatus.slice(1) %></p>
+                    <p><strong>Notes:</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
                     <div>
                         <strong>Photos:</strong>
                         <% client.photos.forEach(photo => { %>
@@ -108,7 +108,7 @@
                         <% }) %>
                     </div>
                     <p><strong>Commercial:</strong> <%= client.emailCommercial %></p>
-                    <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR') %></p>
+                    <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
                 </div>
             </div>
         </div>

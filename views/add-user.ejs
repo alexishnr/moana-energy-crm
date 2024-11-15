@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un utilisateur</title>
-</head>
-<body>
-    <div class="content clearfix">
+<div class="content clearfix">
         <div class="intro-title-dark-bg">
             <div class="row">
                 <div class="column width-10 offset-1 center">
@@ -18,9 +10,9 @@
                 </div>
             </div>
         </div>
-        <section class="section-block">
-            <div class="row">
-                <div class="column width-12">
+        <div class="section-block pb-0 container">
+            <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
+                <div class="unique-contact-form" style="max-width: unset;">
                     <form action="/auth/add-user" method="POST">
                         <label for="nom">Nom:</label>
                         <input type="text" id="nom" name="nom" required>
@@ -41,7 +33,5 @@
                     </form>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
-</body>
-</html>

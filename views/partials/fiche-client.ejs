@@ -1,0 +1,9 @@
+<h2><%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></h2>
+<p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %>, <%= client.code_postal %></p>
+<p><strong>Email:</strong> <%= client.email %></p>
+<p><strong>Téléphone:</strong> <%= client.telephone %></p>
+<p><strong>Statut travaux:</strong> <%= client.workStatus.charAt(0).toUpperCase() + client.workStatus.slice(1) %></p>
+<p><strong>Statut fiche:</strong> <%= client.status.charAt(0).toUpperCase() + client.status.slice(1) %></p>
+<p class="type_renovation"><strong>Type de rénovation:</strong> <%= client.type_renovation.charAt(0).toUpperCase() + client.type_renovation.slice(1) %></p>
+<p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+<a href="/client/<%= client.id %>" class="cta-button">Voir la fiche client</a>

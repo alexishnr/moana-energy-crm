@@ -410,7 +410,7 @@ async function isSuperUser(req, res, next) {
   if (req.session && req.session.userId) {
     try {
       const userDoc = await db.collection('super-users').doc(req.session.userEmail).get();
-      if (userDoc.exists && userDoc.data().superUser) {
+      if (userDoc.exists && userDoc.data().isSuperUser) {
         return next();
       }
     } catch (error) {
