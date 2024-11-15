@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un utilisateur</title>
+</head>
+<body>
+    <div class="content clearfix">
+        <div class="intro-title-dark-bg">
+            <div class="row">
+                <div class="column width-10 offset-1 center">
+                    <div class="title-container">
+                        <div class="title-container-inner color-white">
+                            <h1 class="title-large mb-30">Ajouter un utilisateur</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="section-block">
+            <div class="row">
+                <div class="column width-12">
+                    <form action="/auth/add-user" method="POST">
+                        <label for="nom">Nom:</label>
+                        <input type="text" id="nom" name="nom" required>
+                        <label for="prenom">Prénom:</label>
+                        <input type="text" id="prenom" name="prenom" required>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                        <label for="expirationDate">Date d'expiration:</label>
+                        <input type="date" id="expirationDate" name="expirationDate" required>
+                        <label for="isSuperUser">Super Utilisateur:</label>
+                        <select id="isSuperUser" name="isSuperUser">
+                            <option value="false">Non</option>
+                            <option value="true">Oui</option>
+                        </select>
+                        <div>
+                            <button type="submit" class="cta-button" style="margin-top: 30px;">Ajouter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

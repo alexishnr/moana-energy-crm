@@ -1,0 +1,99 @@
+{
+  "index": {
+    "sections": [
+      {
+        "title": "Notre fonctionnement",
+        "content": "Rénover votre logement ou entreprise à moindre coût avec Moana Energy grâce aux aides du gouvernement.",
+        "video": "https://www.youtube.com/embed/FNsnJRgTsxQ"
+      },
+      {
+        "title": "Notre mission",
+        "content": [
+          "Faciliter l’accès aux aides énergétiques : Aider à obtenir les certificats d’économies d’énergie (CEE) et autres aides.",
+          "Fournir des artisans qualifiés : Sélection rigoureuse de professionnels reconnus par l’État.",
+          "Optimiser l’efficacité énergétique : Réduire la consommation énergétique des habitations et entreprises.",
+          "Assurer un suivi complet : Accompagnement à chaque étape, gestion transparente.",
+          "Contribuer à la transition énergétique : Réduire l’empreinte carbone pour un avenir durable."
+        ]
+      },
+      {
+        "title": "Pourquoi nous choisir ?",
+        "content": [
+          {
+            "subtitle": "Expertise et qualité",
+            "text": "Travaux de haute qualité avec des artisans certifiés et reconnus par l’État."
+          },
+          {
+            "subtitle": "Polyvalence",
+            "text": "Solutions pour logements individuels, collectifs et entreprises."
+          },
+          {
+            "subtitle": "Réactivité",
+            "text": "Traitement rapide des demandes, gestion fluide et accompagnement complet."
+          },
+          {
+            "subtitle": "Prix compétitifs",
+            "text": "Solutions de rénovation à des tarifs compétitifs grâce aux aides CEE."
+          }
+        ]
+      },
+      {
+        "title": "Nos services",
+        "content": [
+          {
+            "subtitle": "Diagnostic énergétique gratuit",
+            "text": "Évaluation complète des besoins énergétiques de votre logement ou entreprise."
+          },
+          {
+            "subtitle": "Rénovation énergétique de logements",
+            "text": "Garantir confort, économies sur factures et meilleure valeur immobilière."
+          },
+          {
+            "subtitle": "Rénovation énergétique des entreprises",
+            "text": "Améliorer le confort et réduire les dépenses énergétiques des entreprises."
+          },
+          {
+            "subtitle": "Accompagnement administratif",
+            "text": "Gestion des démarches liées aux aides CEE et autres subventions."
+          },
+          {
+            "subtitle": "Suivi et contrôle qualité",
+            "text": "Suivi rigoureux des travaux avec contrôles qualité à chaque étape."
+          }
+        ]
+      }
+    ]
+  },
+  "calorifugeage": {
+    "sections": [
+      {
+        "title": "Qu'est ce que le calorifugeage",
+        "content": "Isoler les tuyaux et équipements de chauffage pour réduire les pertes de chaleur."
+      }
+    ]
+  },
+  "point-singulier": {
+    "sections": [
+      {
+        "title": "Qu'est ce que le point Singulier",
+        "content": "Zone spécifique d'un bâtiment où des pertes de chaleur importantes peuvent se produire."
+      }
+    ]
+  },
+  "particuliers": {
+    "sections": [
+      {
+        "title": "Rénovations pour particuliers",
+        "content": "Solutions de rénovation énergétique pour particuliers, incluant diagnostics et travaux d'isolation."
+      }
+    ]
+  },
+  "entreprises": {
+    "sections": [
+      {
+        "title": "Rénovations pour entreprises",
+        "content": "Solutions sur mesure pour améliorer l'efficacité énergétique et réduire les coûts des entreprises."
+      }
+    ]
+  }
+}

@@ -1,0 +1,106 @@
+<!-- Side Navigation Menu -->
+<aside class="side-navigation-wrapper enter-right" data-no-scrollbar data-animation="push-in">
+    <div class="side-navigation-scroll-pane">
+        <div class="side-navigation-inner">
+            <div class="side-navigation-header">
+                <div class="navigation-hide side-nav-hide">
+                    <a href="#">
+                        <span class="icon-cancel medium"></span>
+                    </a>
+                </div>
+            </div>
+            <nav class="side-navigation">
+                <ul>
+                    <li class="current">
+                        <a href="/">Accueil</a>
+                    </li>
+                    <li><a href="/clients">Liste des clients</a></li>
+                    <li><a href="/ajouter-client">Ajouter un client</a></li>
+                    <% if (session.isSuperUser) { %>
+                    <li><a href="/clients-en-attente">Clients en attente</a></li>
+                    <li><a href="/add-user">Ajouter un utilisateur</a></li>
+                    <% } %>
+                    <li><a href="/auth/logout">Déconnexion</a></li>
+                </ul>
+            </nav>
+            <div class="side-navigation-footer">
+                <p class="copyright no-margin-bottom">&copy;Made by <a href="https://www.h2h.dev">H2H agency</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</aside>
+<!-- Side Navigation Menu End -->
+
+<div class="wrapper reveal-side-navigation">
+    <div class="wrapper-inner">
+
+        <!-- Header -->
+        <header class="header header-fixed header-fixed-on-mobile header-transparent" data-bkg-threshold="370"
+            data-compact-threshold="370">
+            <div class="header-inner">
+                <div class="row nav-bar">
+                    <div class="column width-12 nav-bar-inner">
+                        <div class="logo">
+                            <div class="logo-inner">
+                                <a href="/"><img src="/images/assets/logos/moanabg-black.png"
+                                        alt="Moana Energy Logo" /></a>
+                                <a href="/"><img src="/images/assets/logos/moanabg-white.png"
+                                        alt="Moana Energy Logo" /></a>
+                            </div>
+                        </div>
+                        <nav class="navigation nav-block secondary-navigation nav-right">
+                            <ul>
+                                <li class="aux-navigation hide">
+                                    <!-- Aux Navigation -->
+                                    <a href="/" class="navigation-show side-nav-show nav-icon">
+                                        <span class="icon-menu"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <nav class="navigation nav-block primary-navigation nav-right">
+                            <ul>
+                                <li class="current">
+                                    <a href="/">Accueil</a>
+                                </li>
+                                <li><a href="/clients">Liste des clients</a></li>
+                                <li><a href="/ajouter-client">Ajouter un client</a></li>
+                                <% if (session.isSuperUser) { %>
+                                <li><a href="/clients-en-attente">Clients en attente</a></li>
+                                <li><a href="/add-user">Ajouter un utilisateur</a></li>
+                                <% } %>
+                                <li><a href="/auth/logout">Déconnexion</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Header End -->
+
+        <!-- ...existing code... -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var currentUrl = window.location.pathname;
+                var menuItems = document.querySelectorAll('.primary-navigation ul li a, .side-navigation ul li a');
+                menuItems.forEach(function(item) {
+                    if (item.getAttribute('href') === currentUrl) {
+                        item.parentElement.classList.add('current');
+                        // Si l'élément est dans un sous-menu, ajoutez la classe 'current' à son parent
+                        var parentMenu = item.closest('.sub-menu');
+                        if (parentMenu) {
+                            parentMenu.closest('li').classList.add('current');
+                        }
+                    } else {
+                        item.parentElement.classList.remove('current');
+                    }
+                });
+            });
+        </script>
+        <!-- ...existing code... -->
+
+        <!-- Content -->
+        <div class="content clearfix">
+
+            <!-- Fullscreen Slider Section -->

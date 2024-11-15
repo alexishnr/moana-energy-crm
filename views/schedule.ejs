@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmer un rendez-vous</title>
+</head>
+<body>
+    <div class="content clearfix">
+        <div class="intro-title-dark-bg">
+            <div class="row">
+                <div class="column width-10 offset-1 center">
+                    <div class="title-container">
+                        <div class="title-container-inner color-white">
+                            <h1 class="title-large mb-30">Programmer un rendez-vous</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="section-block">
+            <div class="row">
+                <div class="column width-12">
+                    <form action="/client/<%= client.id %>/schedule" method="POST">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date" required>
+                        
+                        <label for="time">Heure:</label>
+                        <input type="time" id="time" name="time" required>
+                        
+                        <button type="submit" class="cta-button" style="margin-top: 30px;">Programmer</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

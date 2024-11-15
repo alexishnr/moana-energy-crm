@@ -1,0 +1,71 @@
+<div class="content clearfix">
+        <div class="intro-title-dark-bg">
+            <div class="row">
+                <div class="column width-10 offset-1 center">
+                    <div class="title-container">
+                        <div class="title-container-inner color-white">
+                            <h1 class="title-large mb-30">Ajouter un client</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-block pb-0 container">
+            <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
+                <div class="unique-contact-form" style="max-width: unset;">
+                    <h2>Formulaire d'ajout de client</h2>
+                    <form action="/add-client" method="POST" enctype="multipart/form-data">
+                        <div class="unique-form-group">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" name="nom" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="prenom">Prénom</label>
+                            <input type="text" id="prenom" name="prenom" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="adresse">Adresse</label>
+                            <input type="text" id="adresse" name="adresse" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="ville">Ville</label>
+                            <input type="text" id="ville" name="ville" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="code_postal">Code Postal</label>
+                            <input type="text" id="code_postal" name="code_postal" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="type_renovation">Type de rénovation souhaitée</label>
+                            <input type="text" id="type_renovation" name="type_renovation" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="superficie">Superficie</label>
+                            <input type="text" id="superficie" name="superficie" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="type_batiment">Type de bâtiment</label>
+                            <input type="text" id="type_batiment" name="type_batiment" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="photos">Photos</label>
+                            <input type="file" id="photos" name="photos" multiple>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="notes">Notes supplémentaires</label>
+                            <textarea id="notes" name="notes"></textarea>
+                        </div>
+                        <button type="submit" class="unique-submit-btn">Ajouter le client</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,37 @@
+{
+  "sections": {
+    "about": {
+      "title": "À propos de nous",
+      "content": "Moana Energy est spécialisée dans la transition énergétique. Nous aidons les particuliers et les entreprises à rénover leurs bâtiments pour améliorer leur efficacité énergétique et réduire leur empreinte carbone."
+    },
+    "mission": {
+      "title": "Notre mission",
+      "content": "Faciliter l’accès aux aides énergétiques, fournir des artisans qualifiés et certifiés<, optimiser l’efficacité énergétique des logements et des entreprises, assurer un suivi complet et contribuer à la transition énergétique."
+    },
+    "services": {
+      "title": "Nos services",
+      "content": "Diagnostic énergétique gratuit, rénovation énergétique de logements, rénovation énergétique des entreprises, accompagnement administratif, suivi et contrôle qualité"
+    },
+    "contact": {
+      "title": "Nous contacter",
+      "content": "<p>Pour toute question ou demande de renseignement, n'hésitez pas à nous contacter via notre formulaire en ligne ou par téléphone au 06 99 55 05 95.</p>"
+    },
+    "faq": {
+      "title": "FAQ",
+      "content": [
+        {
+          "question": "Quels types de travaux sont éligibles aux aides énergétiques ?",
+          "answer": "<p>Les travaux éligibles incluent l'isolation, le chauffage, la ventilation, et les énergies renouvelables.</p>"
+        },
+        {
+          "question": "Comment bénéficier des aides énergétiques ?",
+          "answer": "<p>Pour bénéficier des aides, vous devez faire appel à un professionnel certifié RGE et respecter les critères d'éligibilité définis par le gouvernement.</p>"
+        },
+        {
+          "question": "Quels sont les avantages de la rénovation énergétique ?",
+          "answer": "<p>La rénovation énergétique permet de réduire vos factures d'énergie, d'améliorer votre confort et de valoriser votre bien immobilier.</p>"
+        }
+      ]
+    }
+  }
+}

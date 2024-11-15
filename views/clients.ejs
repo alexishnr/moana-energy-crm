@@ -1,0 +1,133 @@
+<div class="content clearfix">
+    <div class="intro-title-dark-bg">
+        <div class="row">
+            <div class="column width-10 offset-1 center">
+                <div class="title-container">
+                    <div class="title-container-inner color-white">
+                        <h1 class="title-large mb-30">Liste clients</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="section-block">
+        <div class="row">
+            <div class="colum">
+                <div>
+                    <button onclick="toggleFilters()">Afficher/Masquer les filtres</button>
+                    <div id="filters" style="display: none;">
+                        <select id="filterVille" onchange="filterClients()">
+                            <option value="">Filtrer par ville</option>
+                            <% clients.forEach(client => { %>
+                                <option value="<%= client.ville %>"><%= client.ville %></option>
+                            <% }) %>
+                        </select>
+                        <select id="filterTypeRenovation" onchange="filterClients()">
+                            <option value="">Filtrer par type de rénovation</option>
+                            <% clients.forEach(client => { %>
+                                <option value="<%= client.type_renovation %>"><%= client.type_renovation %></option>
+                            <% }) %>
+                        </select>
+                        <input type="date" id="filterDate" onchange="filterClients()">
+                    </div>
+                </div>
+                <div>
+                    <button onclick="toggleSort()">Afficher/Masquer le tri</button>
+                    <div id="sort" style="display: none;">
+                        <select id="sortOptions" onchange="sortClients()">
+                            <option value="nom">Trier par nom</option>
+                            <option value="ville">Trier par ville</option>
+                            <option value="type_renovation">Trier par type de rénovation</option>
+                            <option value="date">Trier par date</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin: 10px 0;">
+                    <input type="text" id="searchBar" placeholder="Rechercher un client..." onkeyup="searchClients()">
+                </div>
+                <div id="clientsList">
+                    <div class="rowBootstrap">
+                        <% clients.forEach(client => { %>
+                            <div class="col-6 client-card">
+                                <div class="toastBox alertingBlue">
+                                    <h2><%= client.nom %> <%= client.prenom %></h2>
+                                    <p><strong>Adresse:</strong> <%= client.adresse %>, <%= client.ville %> <%= client.code_postal %></p>
+                                    <p><strong>Email:</strong> <%= client.email %></p>
+                                    <p><strong>Téléphone:</strong> <%= client.telephone %></p>
+                                    <p><strong>Statut travaux:</strong> <%= client.workStatus %></p>
+                                    <p class="type_renovation"><strong>Type de rénovation:</strong> <%= client.type_renovation %></p>
+                                    <p class="date"><strong>Date:</strong> <%= new Date(client.date).toLocaleDateString('fr-FR') %></p>
+                                    <a href="/client/<%= client.id %>" class="cta-button">Voir la fiche client</a>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function toggleFilters() {
+        const filters = document.getElementById('filters');
+        if (filters.style.display === 'none') {
+            filters.style.display = 'block';
+        } else {
+            filters.style.display = 'none';
+        }
+    }
+
+    function toggleSort() {
+        const sort = document.getElementById('sort');
+        if (sort.style.display === 'none') {
+            sort.style.display = 'block';
+        } else {
+            sort.style.display = 'none';
+        }
+    }
+
+    function searchClients() {
+        const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+        const clients = document.querySelectorAll('.client-card');
+        clients.forEach(client => {
+            const clientName = client.querySelector('h2').textContent.toLowerCase();
+            if (clientName.includes(searchTerm)) {
+                client.style.display = 'block';
+            } else {
+                client.style.display = 'none';
+            }
+        });
+    }
+
+    function sortClients() {
+        const sortOption = document.getElementById('sortOptions').value;
+        const clientsList = document.getElementById('clientsList');
+        const clients = Array.from(clientsList.children);
+        clients.sort((a, b) => {
+            const aValue = a.querySelector(`.${sortOption}`).textContent.toLowerCase();
+            const bValue = b.querySelector(`.${sortOption}`).textContent.toLowerCase();
+            return aValue.localeCompare(bValue);
+        });
+        clients.forEach(client => clientsList.appendChild(client));
+    }
+
+    function filterClients() {
+        const filterVille = document.getElementById('filterVille').value.toLowerCase();
+        const filterTypeRenovation = document.getElementById('filterTypeRenovation').value.toLowerCase();
+        const filterDate = document.getElementById('filterDate').value;
+        const clients = document.querySelectorAll('.client-card');
+        clients.forEach(client => {
+            const clientVille = client.querySelector('.ville').textContent.toLowerCase();
+            const clientTypeRenovation = client.querySelector('.type_renovation').textContent.toLowerCase();
+            const clientDate = client.querySelector('.date').textContent;
+            if ((filterVille === "" || clientVille.includes(filterVille)) &&
+                (filterTypeRenovation === "" || clientTypeRenovation.includes(filterTypeRenovation)) &&
+                (filterDate === "" || clientDate === new Date(filterDate).toLocaleDateString('fr-FR'))) {
+                client.style.display = 'block';
+            } else {
+                client.style.display = 'none';
+            }
+        });
+    }
+</script>
