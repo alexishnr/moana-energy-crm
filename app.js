@@ -69,7 +69,7 @@ ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
 
 app.use((req, res, next) => {
   if (req.session) {
-    console.log('Session:', req.session);
+    // console.log('Session:', req.session);
   }
   next();
 });

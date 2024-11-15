@@ -5,13 +5,13 @@ require('firebase/auth');
 
 // Votre configuration Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAYzP4T6vz7OoHdbQQIJqBL0YW7kREHe6s",
-  authDomain: "moana-energy-crm.firebaseapp.com",
-  projectId: "moana-energy-crm",
-  storageBucket: "moana-energy-crm.firebasestorage.app",
-  messagingSenderId: "360119980712",
-  appId: "1:360119980712:web:dc283555d61f4bf32b289d",
-  measurementId: "G-G7V6KLPZ3P"
+  apiKey: "AIzaSyAzM4hveUxF80ecMQQNYfuxIEsgRDiUWLs",
+  authDomain: "moanaenergy-crm-363ec.firebaseapp.com",
+  projectId: "moanaenergy-crm-363ec",
+  storageBucket: "moanaenergy-crm-363ec.firebasestorage.app",
+  messagingSenderId: "317633318260",
+  appId: "1:317633318260:web:0cf56b51e19827a0b8b021",
+  measurementId: "G-7HZ6CVYES3"
 };
 
 // Initialiser Firebase

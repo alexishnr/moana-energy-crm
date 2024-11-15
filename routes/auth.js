@@ -29,9 +29,9 @@ router.get('/login', (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const auth = getAuth(firebaseApp);
+
   signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
-      console.log(userCredential, 'userCredential');
       
       // Signed in
       var user = userCredential.user;
@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
       var errorCode = error.code;
       var errorMessage = error.message;
       console.error('Erreur lors de la connexion de l\'utilisateur:', errorMessage);
-      res.render('login', { title: 'Connexion', error: 'Email ou mot de passe incorrect' });
+      res.render('login', { title: 'Connexion', error: errorMessage });
     });
 });
 
