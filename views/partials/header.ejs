@@ -9,6 +9,7 @@
                     </a>
                 </div>
             </div>
+            <% if (session.userId) { %>
             <nav class="side-navigation">
                 <ul>
                     <li class="current">
@@ -23,6 +24,7 @@
                     <li><a href="/auth/logout">Déconnexion</a></li>
                 </ul>
             </nav>
+            <% } %>
             <div class="side-navigation-footer">
                 <p class="copyright no-margin-bottom">&copy;Made by <a href="https://www.h2h.dev">H2H agency</a>.
                 </p>
@@ -49,6 +51,7 @@
                                         alt="Moana Energy Logo" /></a>
                             </div>
                         </div>
+                        <% if (session.userId) { %>
                         <nav class="navigation nav-block secondary-navigation nav-right">
                             <ul>
                                 <li class="aux-navigation hide">
@@ -73,6 +76,7 @@
                                 <li><a href="/auth/logout">Déconnexion</a></li>
                             </ul>
                         </nav>
+                        <% } %>
                     </div>
                 </div>
             </div>
