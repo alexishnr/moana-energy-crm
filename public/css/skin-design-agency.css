@@ -3952,7 +3952,7 @@ only screen and (				min-resolution: 2dppx) {
 	}
 	}
 
-input[type="text"], input[type="date"], input[type="email"],input[type="tel"],select {
+input[type="text"], input[type="date"], input[type="email"],input[type="tel"],input[type="password"]select {
     width: 100%;
     max-width: 50%;
     padding: 10px;
