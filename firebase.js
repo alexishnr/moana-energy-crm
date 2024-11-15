@@ -1,7 +1,6 @@
 const { initializeApp, getApps } = require("firebase/app");
 const { getFirestore } = require("firebase/firestore");
 const admin = require('firebase-admin');
-const serviceAccount = require('./config/serviceAccountKey.json');
 require('firebase/auth');
 
 // Votre configuration Firebase
