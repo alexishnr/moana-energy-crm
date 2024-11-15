@@ -3924,6 +3924,24 @@ only screen and (				min-resolution: 2dppx) {
 	border-radius: 5px;
 }
 
+.notification-bubble {
+	background-color: #0D47A1;
+	color: white;
+	border-radius: 50%;
+	padding: 2px 6px;
+	font-size: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+    height: 20px;
+	margin-left: 5px;
+}
+.notification-bubble-mobile {
+	display: none;
+}
+
+
 @keyframes typing {
 	0%, 60%, 100% {
 		transform: translateY(0);
@@ -3949,6 +3967,23 @@ only screen and (				min-resolution: 2dppx) {
 	}
 	.youtubeVideoDesktop{
 		display: none;
+	}
+	.notification-bubble-mobile {
+		display: block;
+		background-color: #0D47A1;
+		color: white;
+		border-radius: 50%;
+		padding: 2px 6px;
+		font-size: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		margin-left: 5px;
+		position: absolute;
+		top: 10px!important;
+		right: 0!important;
 	}
 	}
 

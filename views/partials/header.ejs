@@ -18,7 +18,10 @@
                     <li><a href="/clients">Liste des clients</a></li>
                     <li><a href="/ajouter-client">Ajouter un client</a></li>
                     <% if (session.isSuperUser) { %>
-                    <li><a href="/clients-en-attente">Clients en attente</a></li>
+                        <li style="position: relative;">
+                            <a style="display: flex;" href="/clients-en-attente">Clients en attente <span class="notification-bubble"><%= pendingClientsCount %></span></a>
+                            
+                        </li>
                     <li><a href="/add-user">Ajouter un utilisateur</a></li>
                     <% } %>
                     <li><a href="/auth/logout">Déconnexion</a></li>
@@ -52,11 +55,14 @@
                             </div>
                         </div>
                         <% if (session.userId) { %>
-                        <nav class="navigation nav-block secondary-navigation nav-right">
+                        <nav class="navigation nav-block secondary-navigation nav-right" style="display: flex;">
                             <ul>
+                                <% if (pendingClientsCount > 0) { %>
+                                    <span class="notification-bubble-mobile"><%= pendingClientsCount %></span>
+                                    <% } %>
                                 <li class="aux-navigation hide">
                                     <!-- Aux Navigation -->
-                                    <a href="/" class="navigation-show side-nav-show nav-icon">
+                                    <a href="/" class="navigation-show side-nav-show nav-icon" style="display: flex;">
                                         <span class="icon-menu"></span>
                                     </a>
                                 </li>
@@ -70,7 +76,10 @@
                                 <li><a href="/clients">Liste des clients</a></li>
                                 <li><a href="/ajouter-client">Ajouter un client</a></li>
                                 <% if (session.isSuperUser) { %>
-                                <li><a href="/clients-en-attente">Clients en attente</a></li>
+                                <li style="position: relative;">
+                                    <a style="display: flex;" href="/clients-en-attente">Clients en attente <span class="notification-bubble"><%= pendingClientsCount %></span></a>
+                                    
+                                </li>
                                 <li><a href="/add-user">Ajouter un utilisateur</a></li>
                                 <% } %>
                                 <li><a href="/auth/logout">Déconnexion</a></li>
@@ -82,8 +91,7 @@
             </div>
         </header>
         <!-- Header End -->
-
-        <!-- ...existing code... -->
+    
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 var currentUrl = window.location.pathname;

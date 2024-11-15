@@ -42,9 +42,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Middleware pour ajouter les variables de session aux vues
-router.use((req, res, next) => {
+// Middleware pour ajouter les variables de session et le nombre de clients en attente aux vues
+router.use(async (req, res, next) => {
   res.locals.session = req.session;
+  if (req.session.isSuperUser) {
+    try {
+      const pendingClientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
+      res.locals.pendingClientsCount = pendingClientsSnapshot.size;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des clients en attente:', error);
+      res.locals.pendingClientsCount = 0;
+    }
+  } else {
+    res.locals.pendingClientsCount = 0;
+  }
   next();
 });
 
