@@ -7,12 +7,9 @@ const multer = require('multer');
 const { isAuthenticated } = require('../middleware/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const db = getFirestore(); // Initialiser Firestore
-// const { getStorage } = require('firebase-admin/storage');
-// const storage = getStorage();
-// const bucket = storage.bucket();
 
 // Configuration de multer pour les téléchargements de fichiers
-const storageMulter = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
   },
@@ -21,7 +18,7 @@ const storageMulter = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storageMulter });
+const upload = multer({ storage: storage });
 
 // Middleware pour ajouter les variables de session aux vues
 router.use((req, res, next) => {
@@ -40,26 +37,9 @@ router.get('/ajouter-client', isAuthenticated, function(req, res, next) {
 });
 
 router.post('/add-client', isAuthenticated, upload.array('photos', 10), async function(req, res, next) {
-  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment } = req.body;
-  const photos = [];
+  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, workStatus } = req.body;
+  const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
   try {
-    // Upload des photos à Firebase Storage
-    for (const file of req.files) {
-      const blob = bucket.file(file.filename);
-      const blobStream = blob.createWriteStream({
-        metadata: {
-          contentType: file.mimetype,
-        },
-      });
-      blobStream.on('error', (err) => {
-        console.error('Erreur lors de l\'upload de la photo:', err);
-      });
-      blobStream.on('finish', () => {
-        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-        photos.push(publicUrl);
-      });
-      blobStream.end(file.buffer);
-    }
     // Ajouter le client à Firestore
     await db.collection('clients').add({
       nom,
@@ -376,25 +356,8 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
 router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('photos', 10), async function(req, res, next) {
   const clientId = req.params.id;
   const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, workStatus } = req.body;
-  const photos = [];
+  const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
   try {
-    // Upload des nouvelles photos à Firebase Storage
-    for (const file of req.files) {
-      const blob = bucket.file(file.filename);
-      const blobStream = blob.createWriteStream({
-        metadata: {
-          contentType: file.mimetype,
-        },
-      });
-      blobStream.on('error', (err) => {
-        console.error('Erreur lors de l\'upload de la photo:', err);
-      });
-      blobStream.on('finish', () => {
-        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-        photos.push(publicUrl);
-      });
-      blobStream.end(file.buffer);
-    }
     // Mettre à jour le client dans Firestore
     await db.collection('clients').doc(clientId).update({
       nom,
@@ -460,6 +423,136 @@ const transporter = nodemailer.createTransport({
     user: process.env.USER_EMAIL, // Remplacez par votre adresse email
     pass: process.env.USER_PWD  // Mot de passe ou App password
   }
+});
+
+// Route pour envoyer le formulaire de contact
+router.post('/send-email', async (req, res) => {
+  const { name, email, message, subject, 'g-recaptcha-response': recaptchaResponse } = clean(req.body);
+  console.log(recaptchaResponse);
+
+  // Vérifier la présence du recaptchaResponse
+  if (!recaptchaResponse) {
+    return res.render('contact', { successMail: false, error: 'Captcha non complété. Veuillez réessayer.' });
+  }
+
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  const verificationURL = "https://www.google.com/recaptcha/api/siteverify";
+
+  try {
+    // Vérifier le reCAPTCHA avec une requête POST
+    const response = await axios.post(verificationURL, null, {
+      params: {
+        secret: secretKey,
+        response: recaptchaResponse
+      }
+    });
+
+    // Vérifier la réponse de reCAPTCHA
+    if (!response.data.success || response.data.score < 0.5) {
+      return res.render('contact', { successMail: false, error: 'Captcha non vérifié. Veuillez réessayer.' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification du reCAPTCHA:', error);
+    return res.render('contact', { successMail: false, error: 'Erreur lors de la vérification du captcha. Veuillez réessayer.' });
+  }
+
+  // Vérifier les variables d'environnement pour nodemailer
+  if (!process.env.USER_EMAIL || !process.env.USER_PWD) {
+    return res.render('contact', { successMail: false, error: 'Configuration du serveur de messagerie incorrecte.' });
+  }
+
+  // Configuration de nodemailer
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.USER_EMAIL,
+      pass: process.env.USER_PWD,
+    },
+  });
+
+  const mailOptions = {
+    from: email,
+    to: process.env.USER_EMAIL_TO_FWD,
+    subject: `Message de ${name}`,
+    html: `
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email de Contact</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+          }
+          .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+          }
+          .header {
+            background-color: #0D47A1;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+          }
+          .content {
+            padding: 20px;
+          }
+          .content h3 {
+            color: #0D47A1;
+          }
+          .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #777;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h2>Nouveau message de contact</h2>
+          </div>
+          <div class="content">
+            <p><strong>Nom :</strong> ${name}</p>
+            <p><strong>Email :</strong> ${email}</p>
+            <p><strong>Sujet :</strong> ${subject}</p>
+            <h3>Message :</h3>
+            <p>${message}</p>
+          </div>
+          <div class="footer">
+            <p>Ce message vous a été envoyé via le formulaire de contact de votre site web.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  };
+
+  // Envoi de l'email avec nodemailer
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    console.log(info);
+    
+    if (error) {
+      console.error(error);
+      res.render('contact', { successMail: false, error: "Une erreur est survenue lors de l'envoi du message, veuillez réessayer ou envoyez-nous un email à contact@moanaenergy.com" });
+    } else {
+      console.log('Email envoyé : ' + info.response);
+      res.render('contact', { successMail: true, error: "Merci pour votre message. Nous vous répondrons sous 24h !" });
+    }
+  });
 });
 
 module.exports = router;

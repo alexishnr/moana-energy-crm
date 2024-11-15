@@ -11,6 +11,8 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
+const db = admin.firestore();
+
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 
@@ -40,6 +42,16 @@ app.use(session({
     httpOnly: true // Empêcher l'accès aux cookies via JavaScript
   }
 }));
+
+const ntpClient = require('ntp-client');
+
+ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
+  if (err) {
+    console.error("Erreur de connexion au serveur NTP:", err);
+    return;
+  }
+  console.log("Heure exacte:", date);
+});
 
 app.use((req, res, next) => {
   if (req.session) {
