@@ -45,33 +45,32 @@ const upload = multer({ storage: storage });
 // Middleware pour ajouter les variables de session et le nombre de clients en attente aux vues
 router.use(async (req, res, next) => {
   res.locals.session = req.session;
+  res.locals.pendingClientsCount = 0; // Initialiser la variable
   if (req.session.isSuperUser) {
     try {
       const pendingClientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
       res.locals.pendingClientsCount = pendingClientsSnapshot.size;
     } catch (error) {
       console.error('Erreur lors de la récupération des clients en attente:', error);
-      res.locals.pendingClientsCount = 0;
     }
-  } else {
-    res.locals.pendingClientsCount = 0;
   }
   next();
 });
 
 // Page d'accueil
 router.get('/', isAuthenticated, async function(req, res, next) {
-    res.render('index', { title: 'Accueil'});
+  res.render('index', { title: 'Accueil', pendingClientsCount: res.locals.pendingClientsCount });
 });
 
 // Page pour ajouter un client
 router.get('/ajouter-client', isAuthenticated, function(req, res, next) {
-  res.render('add-clients', { title: 'Ajouter un client' });
+  res.render('add-clients', { title: 'Ajouter un client', success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount });
 });
 
 router.post('/add-client', isAuthenticated, upload.array('photos', 10), async function(req, res, next) {
   const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, workStatus } = req.body;
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
+
   try {
     // Ajouter le client à Firestore
     await db.collection('clients').add({
@@ -93,10 +92,10 @@ router.post('/add-client', isAuthenticated, upload.array('photos', 10), async fu
       workStatus: 'premier contact',
       createdAt: new Date().toISOString() // Stocker la date en format ISO
     });
-    res.redirect('/ajouter-client');
+    res.redirect('/ajouter-client?success=true');
   } catch (error) {
     console.error('Erreur lors de l\'ajout du client:', error);
-    res.status(500).send('Erreur lors de l\'ajout du client');
+    res.redirect('/ajouter-client?success=false');
   }
 });
 
@@ -110,7 +109,7 @@ router.get('/clients', isAuthenticated, async function(req, res, next) {
       clientsSnapshot = await db.collection('clients').where('idCommercial', '==', req.session.userId).get();
     }
     const clients = clientsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    res.render('clients', { title: 'Liste des clients', clients: clients });
+    res.render('clients', { title: 'Liste des clients', clients: clients, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de la récupération des clients:', error);
     res.status(500).send('Erreur lors de la récupération des clients');
@@ -126,7 +125,7 @@ router.get('/client/:id', isAuthenticated, async function(req, res, next) {
       return res.status(404).send('Client non trouvé');
     }
     const client = { id: clientDoc.id, ...clientDoc.data() };
-    res.render('client', { title: 'Fiche Client', client: client, isSuperUser: req.session.isSuperUser });
+    res.render('client', { title: 'Fiche Client', client: client, isSuperUser: req.session.isSuperUser, success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de la récupération du client:', error);
     res.status(500).send('Erreur lors de la récupération du client');
@@ -142,7 +141,7 @@ router.get('/client/:id/schedule', isAuthenticated, async function(req, res, nex
       return res.status(404).send('Client non trouvé');
     }
     const client = { id: clientDoc.id, ...clientDoc.data() };
-    res.render('schedule', { client: client });
+    res.render('schedule', { client: client, success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de la récupération du client:', error);
     res.status(500).send('Erreur lors de la récupération du client');
@@ -246,19 +245,19 @@ router.post('/client/:id/schedule', isAuthenticated, async function(req, res, ne
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.error('Erreur lors de l\'envoi de l\'email:', error);
-        return res.status(500).send('Erreur lors de l\'envoi de l\'email');
+        return res.redirect(`/client/${clientId}/schedule?success=false`);
       } else {
         console.log('Email envoyé : ' + info.response);
         // Mettre à jour le workStatus à "rendez-vous planifié"
         await db.collection('clients').doc(clientId).update({
           workStatus: 'rendez-vous planifié'
         });
-        res.redirect(`/client/${clientId}`);
+        res.redirect(`/client/${clientId}/schedule?success=true`);
       }
     });
   } catch (error) {
     console.error('Erreur lors de la programmation du rendez-vous:', error);
-    res.status(500).send('Erreur lors de la programmation du rendez-vous');
+    res.redirect(`/client/${clientId}/schedule?success=false`);
   }
 });
 
@@ -369,19 +368,19 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.error('Erreur lors de l\'envoi de l\'email:', error);
-        return res.status(500).send('Erreur lors de l\'envoi de l\'email');
+        return res.redirect(`/client/${clientId}?success=false`);
       } else {
         console.log('Email envoyé : ' + info.response);
         // Mettre à jour le statut à "transmise"
         await db.collection('clients').doc(clientId).update({
           status: 'transmise'
         });
-        res.redirect(`/client/${clientId}`);
+        res.redirect(`/client/${clientId}?success=true`);
       }
     });
   } catch (error) {
     console.error('Erreur lors de la transmission de la fiche client:', error);
-    res.status(500).send('Erreur lors de la transmission de la fiche client');
+    res.redirect(`/client/${clientId}?success=false`);
   }
 });
 
@@ -409,10 +408,10 @@ router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('phot
       workStatus,
       updatedAt: new Date().toISOString() // Stocker la date en format ISO
     });
-    res.redirect(`/client/${clientId}`);
+    res.redirect(`/client/${clientId}?success=true`);
   } catch (error) {
     console.error('Erreur lors de la mise à jour du client:', error);
-    res.status(500).send('Erreur lors de la mise à jour du client');
+    res.redirect(`/client/${clientId}?success=false`);
   }
 });
 
@@ -436,9 +435,9 @@ router.get('/clients-en-attente', isAuthenticated, isSuperUser, async function(r
   try {
     const clientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
     const clients = clientsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    console.log(clients,'clients');
+
     
-    res.render('clients-en-attente', { title: 'Clients en attente', clients: clients });
+    res.render('clients-en-attente', { title: 'Clients en attente', clients: clients, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de la récupération des clients en attente:', error);
     res.status(500).send('Erreur lors de la récupération des clients en attente');
@@ -446,7 +445,7 @@ router.get('/clients-en-attente', isAuthenticated, isSuperUser, async function(r
 });
 
 router.get('/add-user', isAuthenticated, isSuperUser, async function(req, res, next) {
-    res.render('add-user');
+    res.render('add-user', { success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount });
 });
 
 module.exports = router;

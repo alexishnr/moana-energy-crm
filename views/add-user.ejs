@@ -1,37 +1,56 @@
 <div class="content clearfix">
-        <div class="intro-title-dark-bg">
-            <div class="row">
-                <div class="column width-10 offset-1 center">
-                    <div class="title-container">
-                        <div class="title-container-inner color-white">
-                            <h1 class="title-large mb-30">Ajouter un utilisateur</h1>
-                        </div>
+    <div class="intro-title-dark-bg">
+        <div class="row">
+            <div class="column width-10 offset-1 center">
+                <div class="title-container">
+                    <div class="title-container-inner color-white">
+                        <h1 class="title-large mb-30">Ajouter un utilisateur</h1>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="section-block pb-0 container">
-            <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
-                <div class="unique-contact-form" style="max-width: unset;">
-                    <form action="/auth/add-user" method="POST">
-                        <label for="nom">Nom:</label>
-                        <input type="text" id="nom" name="nom" required>
-                        <label for="prenom">Prénom:</label>
-                        <input type="text" id="prenom" name="prenom" required>
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
-                        <label for="expirationDate">Date d'expiration:</label>
-                        <input type="date" id="expirationDate" name="expirationDate" required>
-                        <label for="isSuperUser">Super Utilisateur:</label>
-                        <select id="isSuperUser" name="isSuperUser">
-                            <option value="false">Non</option>
-                            <option value="true">Oui</option>
-                        </select>
-                        <div>
-                            <button type="submit" class="cta-button" style="margin-top: 30px;">Ajouter</button>
-                        </div>
-                    </form>
+    </div>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Ajouter un utilisateur</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="section-block pb-0 container">
+        <% if (typeof success !== 'undefined') { %>
+            <% if (success) { %>
+                <div class="toastBox alertingGreen">
+                    Action effectuée avec succès
                 </div>
+            <% } else { %>
+                <div class="toastBox alertingRed">
+                    Erreur lors de l'action
+                </div>
+            <% } %>
+        <% } %>
+        <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
+            <div class="unique-contact-form" style="max-width: unset;">
+                <form action="/auth/add-user" method="POST">
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" required>
+                    <label for="prenom">Prénom:</label>
+                    <input type="text" id="prenom" name="prenom" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    <label for="expirationDate">Date d'expiration:</label>
+                    <input type="date" id="expirationDate" name="expirationDate" required>
+                    <label for="isSuperUser">Super Utilisateur:</label>
+                    <select id="isSuperUser" name="isSuperUser">
+                        <option value="false">Non</option>
+                        <option value="true">Oui</option>
+                    </select>
+                    <div>
+                        <button type="submit" class="cta-button" style="margin-top: 30px;">Ajouter</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>

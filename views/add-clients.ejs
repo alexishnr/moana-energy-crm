@@ -10,7 +10,26 @@
                 </div>
             </div>
         </div>
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Ajouter un client</li>
+                </ol>
+            </nav>
+        </div>
         <div class="section-block pb-0 container">
+            <% if (typeof success !== 'undefined') { %>
+                <% if (success) { %>
+                    <div class="toastBox alertingGreen">
+                        Action effectuée avec succès
+                    </div>
+                <% } else { %>
+                    <div class="toastBox alertingRed">
+                        Erreur lors de l'action
+                    </div>
+                <% } %>
+            <% } %>
             <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
                 <div class="unique-contact-form" style="max-width: unset;">
                     <h2>Formulaire d'ajout de client</h2>

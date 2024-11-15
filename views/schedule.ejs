@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,9 +18,30 @@
                 </div>
             </div>
         </div>
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="/clients">Liste des clients</a></li>
+                    <li class="breadcrumb-item"><a href="/client/<%= client.id %>">Fiche client</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Programmer un rendez-vous</li>
+                </ol>
+            </nav>
+        </div>
         <section class="section-block">
             <div class="row">
                 <div class="column width-12">
+                    <% if (typeof success !== 'undefined') { %>
+                        <% if (success) { %>
+                            <div class="toastBox alertingGreen">
+                                Action effectuée avec succès
+                            </div>
+                        <% } else { %>
+                            <div class="toastBox alertingRed">
+                                Erreur lors de l'action
+                            </div>
+                        <% } %>
+                    <% } %>
                     <form action="/client/<%= client.id %>/schedule" method="POST">
                         <label for="date">Date:</label>
                         <input type="date" id="date" name="date" required>

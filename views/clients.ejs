@@ -10,6 +10,14 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Liste clients</li>
+            </ol>
+        </nav>
+    </div>
     <section class="section-block">
         <div class="row">
             <div class="colum">
@@ -50,7 +58,15 @@
                         <% clients.forEach(client => { %>
                             <div class="col-6 client-card">
                                 <div class="toastBox alertingBlue">
-                                    <%- include partials/fiche-client.ejs %>
+                                    <h2><%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></h2>
+                                    <p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %>, <%= client.code_postal %></p>
+                                    <p><strong>Email:</strong> <%= client.email %></p>
+                                    <p><strong>Téléphone:</strong> <%= client.telephone %></p>
+                                    <p><strong>Statut travaux:</strong> <%= client.workStatus.charAt(0).toUpperCase() + client.workStatus.slice(1) %></p>
+                                    <p><strong>Statut fiche:</strong> <%= client.status.charAt(0).toUpperCase() + client.status.slice(1) %></p>
+                                    <p class="type_renovation"><strong>Type de rénovation:</strong> <%= client.type_renovation %></p>
+                                    <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+                                    <a href="/client/<%= client.id %>" class="cta-button">Voir la fiche client</a>
                                 </div>
                             </div>
                         <% }) %>
@@ -64,20 +80,12 @@
 <script>
     function toggleFilters() {
         const filters = document.getElementById('filters');
-        if (filters.style.display === 'none') {
-            filters.style.display = 'block';
-        } else {
-            filters.style.display = 'none';
-        }
+        filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
     }
 
     function toggleSort() {
         const sort = document.getElementById('sort');
-        if (sort.style.display === 'none') {
-            sort.style.display = 'block';
-        } else {
-            sort.style.display = 'none';
-        }
+        sort.style.display = sort.style.display === 'none' ? 'block' : 'none';
     }
 
     function searchClients() {
@@ -85,17 +93,13 @@
         const clients = document.querySelectorAll('.client-card');
         clients.forEach(client => {
             const clientName = client.querySelector('h2').textContent.toLowerCase();
-            if (clientName.includes(searchTerm)) {
-                client.style.display = 'block';
-            } else {
-                client.style.display = 'none';
-            }
+            client.style.display = clientName.includes(searchTerm) ? 'block' : 'none';
         });
     }
 
     function sortClients() {
         const sortOption = document.getElementById('sortOptions').value;
-        const clientsList = document.getElementById('clientsList');
+        const clientsList = document.querySelector('.rowBootstrap');
         const clients = Array.from(clientsList.children);
         clients.sort((a, b) => {
             const aValue = a.querySelector(`.${sortOption}`).textContent.toLowerCase();
@@ -114,13 +118,10 @@
             const clientVille = client.querySelector('.ville').textContent.toLowerCase();
             const clientTypeRenovation = client.querySelector('.type_renovation').textContent.toLowerCase();
             const clientDate = client.querySelector('.date').textContent;
-            if ((filterVille === "" || clientVille.includes(filterVille)) &&
-                (filterTypeRenovation === "" || clientTypeRenovation.includes(filterTypeRenovation)) &&
-                (filterDate === "" || clientDate === new Date(filterDate).toLocaleDateString('fr-FR'))) {
-                client.style.display = 'block';
-            } else {
-                client.style.display = 'none';
-            }
+            const dateMatch = filterDate === "" || new Date(clientDate).toLocaleDateString('fr-FR') === new Date(filterDate).toLocaleDateString('fr-FR');
+            const villeMatch = filterVille === "" || clientVille.includes(filterVille);
+            const typeRenovationMatch = filterTypeRenovation === "" || clientTypeRenovation.includes(filterTypeRenovation);
+            client.style.display = dateMatch && villeMatch && typeRenovationMatch ? 'block' : 'none';
         });
     }
 </script>

@@ -45,6 +45,7 @@ router.post('/login', async (req, res) => {
         req.session.userEmail = user.email;
       } else {
         req.session.isSuperUser = false;
+        req.session.userEmail = user.email;
       }
       res.redirect('/');
     })
@@ -58,7 +59,7 @@ router.post('/login', async (req, res) => {
 
 // Route pour afficher le formulaire d'ajout d'utilisateur
 router.get('/add-user', isAuthenticated, isSuperUser, (req, res) => {
-  res.render('add-user', { title: 'Ajouter un utilisateur' });
+  res.render('add-user', { title: 'Ajouter un utilisateur', success: req.query.success });
 });
 
 // Route pour ajouter un utilisateur
@@ -85,15 +86,13 @@ router.post('/add-user', isAuthenticated, isSuperUser, async (req, res) => {
     };
 
     await db.collection('users').doc(userRecord.uid).set(userData);
-
     if (isSuperUser === 'true') {
       await db.collection('super-users').doc(email).set(userData);
     }
-
-    res.redirect('/auth/add-user');
+    res.redirect('/add-user?success=true');
   } catch (error) {
     console.error('Erreur lors de l\'ajout de l\'utilisateur:', error);
-    res.status(500).send('Erreur lors de l\'ajout de l\'utilisateur');
+    res.redirect('/add-user?success=false');
   }
 });
 

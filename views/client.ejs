@@ -10,8 +10,28 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="/clients">Liste des clients</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Fiche Client</li>
+            </ol>
+        </nav>
+    </div>
     <section class="section-block">
         <div class="row">
+            <% if (typeof success !== 'undefined') { %>
+                <% if (success) { %>
+                    <div class="toastBox alertingGreen">
+                        Action effectuée avec succès
+                    </div>
+                <% } else { %>
+                    <div class="toastBox alertingRed">
+                        Erreur lors de l'action
+                    </div>
+                <% } %>
+            <% } %>
             <div class="column width-12">
                 <div style="margin-bottom: 50px;">
                     <% if (isSuperUser) { %>
@@ -101,7 +121,6 @@
                     <p><strong>Statut fiche client:</strong> <%= client.status.charAt(0).toUpperCase() + client.status.slice(1) %></p>
                     <p><strong>Statut des travaux:</strong> <%= client.workStatus.charAt(0).toUpperCase() + client.workStatus.slice(1) %></p>
                     <p><strong>Notes:</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
-                    <div>
                         <strong>Photos:</strong>
                         <% client.photos.forEach(photo => { %>
                             <img src="<%= photo %>" alt="Photo du client" style="max-width: 100px;">

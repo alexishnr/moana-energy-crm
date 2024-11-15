@@ -17,7 +17,7 @@
                     </li>
                     <li><a href="/clients">Liste des clients</a></li>
                     <li><a href="/ajouter-client">Ajouter un client</a></li>
-                    <% if (session.isSuperUser) { %>
+                    <% if (pendingClientsCount && session.isSuperUser) { %>
                         <li style="position: relative;">
                             <a style="display: flex;" href="/clients-en-attente">Clients en attente <span class="notification-bubble"><%= pendingClientsCount %></span></a>
                             
@@ -57,7 +57,7 @@
                         <% if (session.userId) { %>
                         <nav class="navigation nav-block secondary-navigation nav-right" style="display: flex;">
                             <ul>
-                                <% if (pendingClientsCount > 0) { %>
+                                <% if (pendingClientsCount && pendingClientsCount > 0) { %>
                                     <span class="notification-bubble-mobile"><%= pendingClientsCount %></span>
                                     <% } %>
                                 <li class="aux-navigation hide">

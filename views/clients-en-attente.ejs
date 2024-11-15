@@ -10,6 +10,14 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Clients en attente</li>
+            </ol>
+        </nav>
+    </div>      
     <section class="section-block">
         <div class="row">
             <div class="colum">
@@ -64,20 +72,12 @@
 <script>
     function toggleFilters() {
         const filters = document.getElementById('filters');
-        if (filters.style.display === 'none') {
-            filters.style.display = 'block';
-        } else {
-            filters.style.display = 'none';
-        }
+        filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
     }
 
     function toggleSort() {
         const sort = document.getElementById('sort');
-        if (sort.style.display === 'none') {
-            sort.style.display = 'block';
-        } else {
-            sort.style.display = 'none';
-        }
+        sort.style.display = sort.style.display === 'none' ? 'block' : 'none';
     }
 
     function searchClients() {
@@ -85,17 +85,13 @@
         const clients = document.querySelectorAll('.client-card');
         clients.forEach(client => {
             const clientName = client.querySelector('h2').textContent.toLowerCase();
-            if (clientName.includes(searchTerm)) {
-                client.style.display = 'block';
-            } else {
-                client.style.display = 'none';
-            }
+            client.style.display = clientName.includes(searchTerm) ? 'block' : 'none';
         });
     }
 
     function sortClients() {
         const sortOption = document.getElementById('sortOptions').value;
-        const clientsList = document.getElementById('clientsList');
+        const clientsList = document.querySelector('.rowBootstrap');
         const clients = Array.from(clientsList.children);
         clients.sort((a, b) => {
             const aValue = a.querySelector(`.${sortOption}`).textContent.toLowerCase();
@@ -114,13 +110,10 @@
             const clientVille = client.querySelector('.ville').textContent.toLowerCase();
             const clientTypeRenovation = client.querySelector('.type_renovation').textContent.toLowerCase();
             const clientDate = client.querySelector('.date').textContent;
-            if ((filterVille === "" || clientVille.includes(filterVille)) &&
-                (filterTypeRenovation === "" || clientTypeRenovation.includes(filterTypeRenovation)) &&
-                (filterDate === "" || clientDate === new Date(filterDate).toLocaleDateString('fr-FR'))) {
-                client.style.display = 'block';
-            } else {
-                client.style.display = 'none';
-            }
+            const dateMatch = filterDate === "" || new Date(clientDate).toLocaleDateString('fr-FR') === new Date(filterDate).toLocaleDateString('fr-FR');
+            const villeMatch = filterVille === "" || clientVille.includes(filterVille);
+            const typeRenovationMatch = filterTypeRenovation === "" || clientTypeRenovation.includes(filterTypeRenovation);
+            client.style.display = dateMatch && villeMatch && typeRenovationMatch ? 'block' : 'none';
         });
     }
 </script>

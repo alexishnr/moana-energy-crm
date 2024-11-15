@@ -3472,6 +3472,9 @@ blockquote.border{
 .page-intro .breadcrumb a:hover{
 	opacity: 1;
 }
+.breadcrumb{
+	margin-top: 30px;
+}
 
 /*------------------------------------------------------------------
 [29. Resolution Media Queries]
