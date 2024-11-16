@@ -13,12 +13,6 @@ const { name } = require('ejs');
 const { confirmationTemplate, transmissionTemplate } = require('../templates/emailTemplates');
 
 
-const openai = new OpenAI({
-  apiKey: "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", // Assurez-vous que cette variable d'environnement est définie
-  organization: "org-oJwf2tTC0edXdcWF1QXQ70AU",
-  project: "proj_EmUpnkF67t5Kfvk58rR855Qm",
-});
-
 const siteContentPath = path.join(__dirname, '../public/js/siteContent.json');
 let siteContent = {};
 
