@@ -2,27 +2,11 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const clean = require('xss-clean/lib/xss').clean;
-const axios = require('axios');
 const multer = require('multer');
-const OpenAI = require('openai');
 const { isAuthenticated } = require('../middleware/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const admin = require('firebase-admin');
-const path = require('path');
-const { name } = require('ejs');
 const { confirmationTemplate, transmissionTemplate } = require('../templates/emailTemplates');
-
-
-const siteContentPath = path.join(__dirname, '../public/js/siteContent.json');
-let siteContent = {};
-
-try {
-  const siteContentData = fs.readFileSync(siteContentPath, 'utf8');
-  siteContent = JSON.parse(siteContentData);
-} catch (error) {
-  console.error('Erreur lors du chargement du fichier siteContent.json:', error);
-}
-
 
 // Vérifiez si l'application Firebase a déjà été initialisée
 if (!admin.apps.length) {
