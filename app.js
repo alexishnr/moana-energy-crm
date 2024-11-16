@@ -47,9 +47,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuration du middleware de session
 app.use(session({
+  secret: 'votre_secret_de_session', // Ajoutez un secret pour signer les cookies de session
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true } // Assurez-vous que 'secure' est à true en production avec HTTPS
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // 'true' en production, 'false' en développement
+    httpOnly: true, // Empêche les scripts JavaScript d'accéder aux cookies pour plus de sécurité
+    maxAge: 24 * 60 * 60 * 1000 // Durée de vie du cookie (1 jour ici, ajustez selon vos besoins)
+  }
 }));
 
 const ntpClient = require('ntp-client');
