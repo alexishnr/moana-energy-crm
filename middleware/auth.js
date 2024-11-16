@@ -2,11 +2,16 @@ const { getFirestore } = require('firebase-admin/firestore');
 const db = getFirestore();
 
 async function isAuthenticated(req, res, next) {
+  console.log(req.session);
+  
   if (req.session && req.session.userId) {
+    console.log("authenticated");
+    
     req.session._garbage = Date();
     req.session.touch();
     return next();
   }
+  console.log("not authenticated");
   res.redirect('/auth/login');
 }
 

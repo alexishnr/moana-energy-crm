@@ -47,7 +47,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuration du middleware de session
 app.use(session({
-  secret: 'votre_secret_de_session',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: true } // Assurez-vous que 'secure' est à true en production avec HTTPS
