@@ -103,6 +103,31 @@ router.post('/add-client', isAuthenticated, upload.array('photos', 10), async fu
   }
 });
 
+// Route de connexion
+router.post('/login', async function(req, res, next) {
+  const { email, password } = req.body;
+  try {
+    const userSnapshot = await db.collection('users').where('email', '==', email).get();
+    if (userSnapshot.empty) {
+      return res.render('login', { success: false, message: 'Email ou mot de passe incorrect.' });
+    }
+    const user = userSnapshot.docs[0].data();
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.render('login', { success: false, message: 'Email ou mot de passe incorrect.' });
+    }
+    req.session.userId = user.id;
+    req.session.userEmail = user.email;
+    req.session.userDisplayName = user.displayName;
+    req.session.isSuperUser = user.isSuperUser;
+    // Redirection vers la page d'accueil après une connexion réussie
+    return res.redirect('/');
+  } catch (error) {
+    console.error('Erreur lors de la connexion:', error);
+    return res.render('login', { success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
+  }
+});
+
 // Page pour afficher la liste des clients
 router.get('/clients', isAuthenticated, async function(req, res, next) {
   try {
