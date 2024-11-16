@@ -16,11 +16,21 @@ if (!getApps().length) {
 }
 const db = getFirestore(); // Initialiser Firestore
 
-// Middleware pour ajouter les variables de session aux vues
-router.use((req, res, next) => {
+// Middleware pour ajouter les variables de session et le nombre de clients en attente aux vues
+router.use(async (req, res, next) => {
   res.locals.session = req.session;
+  res.locals.pendingClientsCount = 0; // Initialiser la variable
+  if (req.session.isSuperUser) {
+    try {
+      const pendingClientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
+      res.locals.pendingClientsCount = pendingClientsSnapshot.size;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des clients en attente:', error);
+    }
+  }
   next();
 });
+
 
 // Page de connexion
 router.get('/login', (req, res) => {
@@ -38,14 +48,15 @@ router.post('/login', async (req, res) => {
       // Signed in
       var user = userCredential.user;
       req.session.userId = user.uid;
-
-      const userDoc = await db.collection('super-users').doc(user.email).get();
-      if (userDoc.exists && userDoc.data().isSuperUser) {
+      req.session.userEmail = user.email;
+      req.session.userDisplayName = user.displayName;
+      const userDoc = await db.collection('users').doc(user.uid).get();
+      if (userDoc.exists && userDoc.data().isSuperUser === true) {
         req.session.isSuperUser = true;
-        req.session.userEmail = user.email;
+        req.session.userPhone = userDoc.data().telephone;
       } else {
         req.session.isSuperUser = false;
-        req.session.userEmail = user.email;
+        req.session.userPhone = userDoc.data().telephone;
       }
       res.redirect('/');
     })
@@ -59,15 +70,20 @@ router.post('/login', async (req, res) => {
 
 // Route pour afficher le formulaire d'ajout d'utilisateur
 router.get('/add-user', isAuthenticated, isSuperUser, (req, res) => {
-  res.render('add-user', { title: 'Ajouter un utilisateur', success: req.query.success });
+  const success = req.query.success;
+
+  res.render('add-user', {success, pendingClientsCount: res.locals.pendingClientsCount });
 });
 
 // Route pour ajouter un utilisateur
 router.post('/add-user', isAuthenticated, isSuperUser, async (req, res) => {
-  const { nom, prenom, email, expirationDate, isSuperUser } = req.body;
+  const { nom, prenom, email, expirationDate, isSuperUser, telephone } = req.body;
+
+  let userRecord = null; // Déclare userRecord dans un contexte global à la fonction
+
   try {
     // Créer un nouvel utilisateur Firebase Authentication
-    const userRecord = await admin.auth().createUser({
+    userRecord = await admin.auth().createUser({
       email: email,
       emailVerified: false,
       password: 'defaultPassword123', // Vous pouvez générer un mot de passe aléatoire ou demander à l'utilisateur de le définir
@@ -80,19 +96,29 @@ router.post('/add-user', isAuthenticated, isSuperUser, async (req, res) => {
       nom,
       prenom,
       email,
+      telephone,
       expirationDate,
       isSuperUser: isSuperUser === 'true',
       createdAt: new Date().toISOString()
     };
 
     await db.collection('users').doc(userRecord.uid).set(userData);
-    if (isSuperUser === 'true') {
-      await db.collection('super-users').doc(email).set(userData);
-    }
-    res.redirect('/add-user?success=true');
+
+    res.render('add-user', { success: true, pendingClientsCount: res.locals.pendingClientsCount, message: null });
   } catch (error) {
     console.error('Erreur lors de l\'ajout de l\'utilisateur:', error);
-    res.redirect('/add-user?success=false');
+
+    // Si userRecord existe, supprime l'utilisateur créé dans Firebase Authentication
+    if (userRecord) {
+      try {
+        await admin.auth().deleteUser(userRecord.uid);
+        console.log(`Utilisateur ${userRecord.uid} supprimé après échec.`);
+      } catch (deleteError) {
+        console.error(`Erreur lors de la suppression de l'utilisateur ${userRecord.uid}:`, deleteError);
+      }
+    }
+
+    res.render('add-user', { success: false, pendingClientsCount: res.locals.pendingClientsCount, message: error.message });
   }
 });
 

@@ -13,7 +13,7 @@ async function isAuthenticated(req, res, next) {
 async function isSuperUser(req, res, next) {
   if (req.session && req.session.userId) {
     try {
-      const userDoc = await db.collection('super-users').doc(req.session.userEmail).get();
+      const userDoc = await db.collection('users').doc(req.session.userId).get();
       if (userDoc.exists && userDoc.data().isSuperUser) {
         return next();
       }

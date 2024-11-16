@@ -33,9 +33,26 @@
     <!--footer -->
      <%- include partials/footer.ejs %>
     <!--footer end -->
-
+	<% if (session.userId) { %>
+	<!-- Chatbot -->
+	<div id="chatbot" class="chatbot">
+		<div id="chatbot-header" class="chatbot-header" style="display: flex;justify-content: space-between;align-items: center;">
+			<span>Chatbot Moana Energy</span>
+			<div style="height: 100%;display: flex;align-items: center;justify-content: center;"><img id="chatbot-close" class="chatbot-close" src="/images/assets/icons/close.png" alt="Chatbot" width="15" height="15" /></div>
+		</div>
+		<div id="chatbot-messages" class="chatbot-messages"></div>
+		<input id="chatbot-input" class="chatbot-input" type="text" placeholder="Écrivez un message...">
+		<button id="chatbot-send" class="chatbot-send">Envoyer</button>
+	</div>
+	<!-- Chatbot Toggle Button -->
+	<button id="chatbot-toggle" class="chatbot-toggle" style="background: none; border: none;">
+		<img src="/images/assets/icons/chatbot.png" alt="Chatbot" width="50" height="50" />
+	</button>
+	 <%}%>
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="js/timber.master.min.js"></script>
+	<script src="js/chatbot.js"></script>
 
   </body>
 </html>

@@ -20,71 +20,122 @@
         </div>
         <div class="section-block pb-0 container">
             <% if (typeof success !== 'undefined') { %>
-                <% if (success) { %>
+                <% if (success === true) { %>
                     <div class="toastBox alertingGreen">
                         Action effectuée avec succès
                     </div>
-                <% } else { %>
+                <% } else if(success === false) { %>
                     <div class="toastBox alertingRed">
-                        Erreur lors de l'action
+                        Erreur lors de l'action : <%= message %>
                     </div>
                 <% } %>
             <% } %>
-            <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 50px;">
                 <div class="unique-contact-form" style="max-width: unset;">
                     <h2>Formulaire d'ajout de client</h2>
                     <form action="/add-client" method="POST" enctype="multipart/form-data">
+                        <!-- Type de client -->
                         <div class="unique-form-group">
-                            <label for="nom">Nom</label>
-                            <input type="text" id="nom" name="nom" required>
+                            <label for="type_client">Type de client</label>
+                            <select id="type_client" name="type_client" onchange="toggleFields()" required>
+                                <option value="">- Choisir -</option>
+                                <option value="professionnel">Professionnel</option>
+                                <option value="particulier">Particulier</option>
+                            </select>
                         </div>
-                        <div class="unique-form-group">
-                            <label for="prenom">Prénom</label>
-                            <input type="text" id="prenom" name="prenom" required>
+            
+                        <!-- Champ raison sociale (masqué par défaut) -->
+                        <div class="unique-form-group" id="raison_sociale_group" style="display: none;">
+                            <label for="raison_sociale">Raison sociale</label>
+                            <input type="text" id="raison_sociale" name="raison_sociale">
                         </div>
-                        <div class="unique-form-group">
-                            <label for="adresse">Adresse</label>
-                            <input type="text" id="adresse" name="adresse" required>
+            
+                        <!-- Autres champs (masqués tant que type_client n'est pas choisi) -->
+                        <div id="form_fields" style="display: none;">
+                            <div class="unique-form-group">
+                                <label for="nom">Nom</label>
+                                <input type="text" id="nom" name="nom">
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="prenom">Prénom</label>
+                                <input type="text" id="prenom" name="prenom">
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="adresse">Adresse</label>
+                                <input type="text" id="adresse" name="adresse">
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="ville">Ville</label>
+                                <input type="text" id="ville" name="ville">
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="code_postal">Code Postal</label>
+                                <input type="number" id="code_postal" name="code_postal" minlength="5" maxlength="5" required>
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="type_renovation">Type de rénovation souhaitée</label>
+                                <div id="type_renovation">
+                                    <div style="display: flex;align-items: center;"><label>Calorifugeage</label><input type="checkbox" name="type_renovation[]" value="calorifugeage" class="checkboxForm" ></div>
+                                    <div style="display: flex;white-space:nowrap;align-items: center;"><label>Point singulier</label><input type="checkbox" name="type_renovation[]" value="point_singulier" class="checkboxForm"></div>
+                                </div>
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="telephone">Téléphone</label>
+                                <input type="tel" id="telephone" name="telephone" required pattern="[0-9]{10}" title="Veuillez entrer un numéro de téléphone valide (10 chiffres).">
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="superficie">Superficie (m²)</label>
+                                <input type="number" id="superficie" name="superficie" min="1" required>
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="type_batiment">Type de bâtiment</label>
+                                <select id="type_batiment" name="type_batiment" required>
+                                    <option value="">- Choisir -</option>
+                                    <option value="tertiaire">Tertiaire</option>
+                                    <option value="residence">Bâtiment résidentiel</option>
+                                    <option value="maison">Maison</option>
+                                </select>
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="photos">Photos</label>
+                                <input type="file" id="photos" name="photos" multiple>
+                            </div>
+                            <div class="unique-form-group">
+                                <label for="notes">Notes supplémentaires</label>
+                                <textarea id="notes" name="notes"></textarea>
+                            </div>
                         </div>
-                        <div class="unique-form-group">
-                            <label for="ville">Ville</label>
-                            <input type="text" id="ville" name="ville" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="code_postal">Code Postal</label>
-                            <input type="text" id="code_postal" name="code_postal" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="type_renovation">Type de rénovation souhaitée</label>
-                            <input type="text" id="type_renovation" name="type_renovation" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="telephone">Téléphone</label>
-                            <input type="tel" id="telephone" name="telephone" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="superficie">Superficie</label>
-                            <input type="text" id="superficie" name="superficie" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="type_batiment">Type de bâtiment</label>
-                            <input type="text" id="type_batiment" name="type_batiment" required>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="photos">Photos</label>
-                            <input type="file" id="photos" name="photos" multiple>
-                        </div>
-                        <div class="unique-form-group">
-                            <label for="notes">Notes supplémentaires</label>
-                            <textarea id="notes" name="notes"></textarea>
-                        </div>
-                        <button type="submit" class="unique-submit-btn">Ajouter le client</button>
+            
+                        <button type="submit" class="unique-submit-btn" style="margin-top: 20px;">Ajouter le client</button>
                     </form>
                 </div>
             </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        function toggleFields() {
+    const typeClient = document.getElementById('type_client').value;
+    const formFields = document.getElementById('form_fields');
+    const raisonSocialeGroup = document.getElementById('raison_sociale_group');
+
+    if (typeClient === 'professionnel') {
+        // Afficher les champs pour un professionnel
+        formFields.style.display = 'block';
+        raisonSocialeGroup.style.display = 'block';
+    } else if (typeClient === 'particulier') {
+        // Afficher les champs pour un particulier (sans raison sociale)
+        formFields.style.display = 'block';
+        raisonSocialeGroup.style.display = 'none';
+    } else {
+        // Masquer tous les champs si aucun type de client n'est choisi
+        formFields.style.display = 'none';
+        raisonSocialeGroup.style.display = 'none';
+    }
+}
+    </script>

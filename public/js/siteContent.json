@@ -2,97 +2,134 @@
   "index": {
     "sections": [
       {
-        "title": "Notre fonctionnement",
-        "content": "Rénover votre logement ou entreprise à moindre coût avec Moana Energy grâce aux aides du gouvernement.",
-        "video": "https://www.youtube.com/embed/FNsnJRgTsxQ"
-      },
-      {
-        "title": "Notre mission",
-        "content": [
-          "Faciliter l’accès aux aides énergétiques : Aider à obtenir les certificats d’économies d’énergie (CEE) et autres aides.",
-          "Fournir des artisans qualifiés : Sélection rigoureuse de professionnels reconnus par l’État.",
-          "Optimiser l’efficacité énergétique : Réduire la consommation énergétique des habitations et entreprises.",
-          "Assurer un suivi complet : Accompagnement à chaque étape, gestion transparente.",
-          "Contribuer à la transition énergétique : Réduire l’empreinte carbone pour un avenir durable."
-        ]
-      },
-      {
-        "title": "Pourquoi nous choisir ?",
-        "content": [
+        "title": "Comment ajouter des clients?",
+        "description": "Le processus pour ajouter un client au dashboard implique de remplir un formulaire avec des informations obligatoires comme le nom, l'adresse et le type de rénovation souhaitée.",
+        "steps": [
+          "1. Cliquez sur le bouton 'Ajouter un client' visible dans le menu principal ou sur la page d'accueil.",
+          "2. Sélectionnez le type de client : professionnel ou particulier.",
+          "3. Remplissez tous les champs obligatoires dans le formulaire.",
+          "4. Vérifiez les données saisies avant de soumettre le formulaire."
+        ],
+        "faq": [
           {
-            "subtitle": "Expertise et qualité",
-            "text": "Travaux de haute qualité avec des artisans certifiés et reconnus par l’État."
+            "question": "Quels champs sont obligatoires pour ajouter un client ?",
+            "answer": "Les champs obligatoires incluent le nom, l'adresse, le type de rénovation souhaitée, et le type de client (professionnel ou particulier)."
           },
           {
-            "subtitle": "Polyvalence",
-            "text": "Solutions pour logements individuels, collectifs et entreprises."
+            "question": "Pourquoi ne puis-je pas soumettre le formulaire d'ajout de client ?",
+            "answer": "Assurez-vous que tous les champs obligatoires sont remplis et qu'ils ne contiennent pas d'erreurs (par exemple, email ou téléphone mal formatés)."
           },
           {
-            "subtitle": "Réactivité",
-            "text": "Traitement rapide des demandes, gestion fluide et accompagnement complet."
-          },
-          {
-            "subtitle": "Prix compétitifs",
-            "text": "Solutions de rénovation à des tarifs compétitifs grâce aux aides CEE."
+            "question": "Comment modifier une fiche client après l'avoir ajoutée ?",
+            "answer": "Les commerciaux ne peuvent pas modifier ou supprimer de fiches. Veuillez contacter le support technique pour toute modification."
           }
         ]
       },
       {
-        "title": "Nos services",
-        "content": [
+        "title": "Comment suivre les fiches des clients?",
+        "description": "Les fiches permettent de suivre le statut des clients et des travaux associés. Les statuts disponibles sont : en attente, validée, refusée, ou transmise.",
+        "details": [
+          "Vous pouvez également suivre la progression des travaux à travers les étapes : premier contact, rendez-vous planifié, visite technique effectuée, travaux en cours, travaux complétés.",
+          "Pour accéder à une fiche, cliquez sur le nom du client dans la liste des clients."
+        ],
+        "faq": [
           {
-            "subtitle": "Diagnostic énergétique gratuit",
-            "text": "Évaluation complète des besoins énergétiques de votre logement ou entreprise."
+            "question": "Comment savoir si une fiche est validée ?",
+            "answer": "Le statut de chaque fiche est visible dans la liste des clients. Si une fiche est validée, son statut sera marqué comme 'validée'."
           },
           {
-            "subtitle": "Rénovation énergétique de logements",
-            "text": "Garantir confort, économies sur factures et meilleure valeur immobilière."
+            "question": "Que signifie le statut 'transmise' ?",
+            "answer": "Le statut 'transmise' indique que la fiche a été envoyée à DDER pour traitement."
           },
           {
-            "subtitle": "Rénovation énergétique des entreprises",
-            "text": "Améliorer le confort et réduire les dépenses énergétiques des entreprises."
-          },
-          {
-            "subtitle": "Accompagnement administratif",
-            "text": "Gestion des démarches liées aux aides CEE et autres subventions."
-          },
-          {
-            "subtitle": "Suivi et contrôle qualité",
-            "text": "Suivi rigoureux des travaux avec contrôles qualité à chaque étape."
+            "question": "Puis-je suivre l'avancement des travaux d'un client ?",
+            "answer": "Oui, les statuts des travaux sont disponibles dans chaque fiche client et indiquent des étapes comme 'travaux en cours' ou 'travaux complétés'."
           }
         ]
-      }
-    ]
-  },
-  "calorifugeage": {
-    "sections": [
+      },
       {
-        "title": "Qu'est ce que le calorifugeage",
-        "content": "Isoler les tuyaux et équipements de chauffage pour réduire les pertes de chaleur."
-      }
-    ]
-  },
-  "point-singulier": {
-    "sections": [
+        "title": "Comment utiliser les filtres pour rechercher et trier des clients?",
+        "description": "Le dashboard offre plusieurs options de filtres pour affiner les recherches selon des critères comme la ville, le type de rénovation, ou la date de création.",
+        "steps": [
+          "1. Accédez à la liste des clients.",
+          "2. Utilisez les filtres disponibles (ville, type de rénovation, date) pour affiner les résultats.",
+          "3. Vous pouvez également entrer un mot-clé dans la barre de recherche pour trouver un client spécifique."
+        ],
+        "faq": [
+          {
+            "question": "Comment puis-je trier les résultats par date de création ?",
+            "answer": "Utilisez l'option de tri située en haut de la liste des clients et sélectionnez 'Date de création'."
+          },
+          {
+            "question": "Puis-je filtrer les clients par type de rénovation ?",
+            "answer": "Oui, cochez les cases correspondant au type de rénovation souhaité (calorifugeage, point singulier, etc.)."
+          },
+          {
+            "question": "Pourquoi un client n'apparaît-il pas dans les résultats filtrés ?",
+            "answer": "Assurez-vous que le filtre appliqué correspond aux informations du client. Si le problème persiste, contactez le support."
+          }
+        ]
+      },
       {
-        "title": "Qu'est ce que le point Singulier",
-        "content": "Zone spécifique d'un bâtiment où des pertes de chaleur importantes peuvent se produire."
-      }
-    ]
-  },
-  "particuliers": {
-    "sections": [
+        "title": "Comment contacter le support technique?",
+        "description": "Le support technique est disponible pour aider avec les problèmes liés au dashboard.",
+        "contactInfo": [
+          "Email : support@moanaenergy.com",
+          "Horaires : du lundi au vendredi, de 9h à 18h."
+        ],
+        "faq": [
+          {
+            "question": "Quand dois-je contacter le support ?",
+            "answer": "Vous pouvez contacter le support pour des problèmes techniques ou des questions concernant le fonctionnement du dashboard."
+          },
+          {
+            "question": "Comment contacter le support ?",
+            "answer": "Envoyez un email à support@moanaenergy.com ou utilisez le bouton 'Support' dans le dashboard."
+          }
+        ]
+      },
       {
-        "title": "Rénovations pour particuliers",
-        "content": "Solutions de rénovation énergétique pour particuliers, incluant diagnostics et travaux d'isolation."
-      }
-    ]
-  },
-  "entreprises": {
-    "sections": [
+        "title": "Comment transmettre une fiche à DDER?",
+        "description": "Une fois la fiche validée, elle peut être transmise à DDER pour traitement.",
+        "steps": [
+          "1. Accédez à la fiche client que vous souhaitez transmettre.",
+          "2. Assurez-vous que toutes les informations obligatoires sont complètes et correctes.",
+          "3. Cliquez sur le bouton 'Transmettre à DDER' dans la fiche client."
+        ],
+        "faq": [
+          {
+            "question": "Comment transmettre une fiche à DDER?",
+            "answer": "Une fois la fiche clien validée, vous pouvez transmettre les informations nécessaires à DDER via un bouton dédié dans la fiche client. Assurez-vous que toutes les informations requises sont complètes avant de transmettre la fiche."
+          },
+          {
+            "question": "Quand puis-je transmettre une fiche à DDER ?",
+            "answer": "Vous pouvez transmettre une fiche à DDER uniquement après qu'elle ait été validée."
+          },
+          {
+            "question": "Que faire si je ne peux pas transmettre une fiche ?",
+            "answer": "Assurez-vous que toutes les informations obligatoires sont remplies. Si le problème persiste, contactez le support technique."
+          }
+        ]
+      },
       {
-        "title": "Rénovations pour entreprises",
-        "content": "Solutions sur mesure pour améliorer l'efficacité énergétique et réduire les coûts des entreprises."
+        "title": "Comment notifier un rendez-vous avec un client?",
+        "description": "L'outil de planification intégré permet de gérer les rendez-vous avec les clients directement depuis le dashboard.",
+        "steps": [
+          "1. Accédez à la fiche du client concerné.",
+          "2. Cliquez sur le bouton 'Planifier un rendez-vous'.",
+          "3. Sélectionnez une date et une heure disponibles.",
+          "4. Envoyez une confirmation au client par email, SMS ou appel."
+        ],
+        "faq": [
+          {
+            "question": "Comment modifier un rendez-vous planifié ?",
+            "answer": "Accédez à la fiche client et utilisez l'option 'Modifier le rendez-vous'."
+          },
+          {
+            "question": "Puis-je envoyer une notification au client pour le rendez-vous ?",
+            "answer": "Oui, le système permet d'envoyer des confirmations par email automatique après la planification."
+          }
+        ]
       }
     ]
   }

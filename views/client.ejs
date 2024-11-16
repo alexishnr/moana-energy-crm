@@ -4,7 +4,13 @@
             <div class="column width-10 offset-1 center">
                 <div class="title-container">
                     <div class="title-container-inner color-white">
-                        <h1 class="title-large mb-30">Fiche Client</h1>
+                        <h1 class="title-large mb-30">Fiche client : 
+                            <% if (client.type_client === 'professionnel') { %>
+                                <%= client.raison_sociale %>
+                            <% } else { %>
+                                <%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %>
+                            <% } %>
+                        </h1>
                     </div>
                 </div>
             </div>
@@ -92,42 +98,76 @@
                     <div class="unique-form-group">
                         <label for="status">Statut fiche client</label>
                         <select id="status" name="status" required>
-                            <option value="validé" <%= client.status === 'validé' ? 'selected' : '' %>>Validé</option>
-                            <option value="en attente" <%= client.status === 'en attente' ? 'selected' : '' %>>En attente</option>
-                            <option value="invalide" <%= client.status === 'invalide' ? 'selected' : '' %>>Invalide</option>
-                            <option value="transmise" <%= client.status === 'transmise' ? 'selected' : '' %>>Transmise</option>
+                            <option value="validée" <%= client.statutClient === 'validée' ? 'selected' : '' %>>Validée</option>
+                            <option value="en attente" <%= client.statutClient === 'en attente' ? 'selected' : '' %>>En attente</option>
+                            <option value="refusée" <%= client.statutClient === 'refusée' ? 'selected' : '' %>>Refusée</option>
+                            <option value="fiche transmise" <%= client.statutClient === 'fiche transmise' ? 'selected' : '' %>>Fiche transmise</option>
                         </select>
                     </div>
                     <div class="unique-form-group">
-                        <label for="workStatus">Statut des travaux</label>
-                        <select id="workStatus" name="workStatus" required>
-                            <option value="premier contact" <%= client.workStatus === 'premier contact' ? 'selected' : '' %>>Premier contact</option>
-                            <option value="rendez-vous planifié" <%= client.workStatus === 'rendez-vous planifié' ? 'selected' : '' %>>Rendez-vous planifié</option>
-                            <option value="visite technique effectuée" <%= client.workStatus === 'visite technique effectuée' ? 'selected' : '' %>>Visite technique effectuée</option>
-                            <option value="travaux en cours" <%= client.workStatus === 'travaux en cours' ? 'selected' : '' %>>Travaux en cours</option>
-                            <option value="travaux complétés" <%= client.workStatus === 'travaux complétés ' ? 'selected' : '' %>>Travaux complétés </option>
+                        <label for="statutTravaux">Statut des travaux</label>
+                        <select id="statutTravaux" name="statutTravaux" required>
+                            <option value="premier contact" <%= client.statutTravaux === 'premier contact' ? 'selected' : '' %>>Premier contact</option>
+                            <option value="rendez-vous planifié" <%= client.statutTravaux === 'rendez-vous planifié' ? 'selected' : '' %>>Rendez-vous planifié</option>
+                            <option value="visite technique effectuée" <%= client.statutTravaux === 'visite technique effectuée' ? 'selected' : '' %>>Visite technique effectuée</option>
+                            <option value="travaux en cours" <%= client.statutTravaux === 'travaux en cours' ? 'selected' : '' %>>Travaux en cours</option>
+                            <option value="travaux complétés" <%= client.statutTravaux === 'travaux complétés ' ? 'selected' : '' %>>Travaux complétés </option>
                         </select>
                     </div>
+                    <div class="unique-form-group">
+                        <label for="type_client">Type de client</label>
+                        <select id="type_client" name="type_client" required>
+                            <option value="professionnel" <%= client.type_client === 'professionnel' ? 'selected' : '' %>>Professionnel</option>
+                            <option value="particulier" <%= client.type_client === 'particulier' ? 'selected' : '' %>>Particulier</option>
+                        </select>
+                    </div>
+                    <% if (client.type_client === 'professionnel') { %>
+                        <div class="unique-form-group">
+                            <label for="raison_sociale">Raison sociale</label>
+                            <input type="text" id="raison_sociale" name="raison_sociale" value="<%= client.raison_sociale %>">
+                        </div>
+                    <% } %>
                     <button type="submit" id="saveButton" class="unique-submit-btn">Mettre à jour le client</button>
                 </form>
-                <div id="clientDetails">
-                    <h2><%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></h2>
-                    <p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %> <%= client.code_postal %></p>
-                    <p><strong>Email:</strong> <%= client.email %></p>
-                    <p><strong>Téléphone:</strong> <%= client.telephone %></p>
-                    <p><strong>Superficie:</strong> <%= client.superficie.charAt(0).toUpperCase() + client.superficie.slice(1) %></p>
-                    <p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
-                    <p><strong>Type de rénovation:</strong> <%= client.type_renovation.charAt(0).toUpperCase() + client.type_renovation.slice(1) %></p>
-                    <p><strong>Statut fiche client:</strong> <%= client.status.charAt(0).toUpperCase() + client.status.slice(1) %></p>
-                    <p><strong>Statut des travaux:</strong> <%= client.workStatus.charAt(0).toUpperCase() + client.workStatus.slice(1) %></p>
-                    <p><strong>Notes:</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
-                        <strong>Photos:</strong>
-                        <% client.photos.forEach(photo => { %>
-                            <img src="<%= photo %>" alt="Photo du client" style="max-width: 100px;">
-                        <% }) %>
+                <div class="toastBox alertingBlue">
+                    <div id="clientDetails">
+                        <h2>
+                            <% if (client.type_client === 'professionnel') { %>
+                                <%= client.raison_sociale %>
+                            <% } else { %>
+                                <%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %>
+                            <% } %>
+                        </h2>
+                        <p><strong>Type de client:</strong> <%= client.type_client.charAt(0).toUpperCase() + client.type_client.slice(1) %></p>
+                        <% if (client.type_client === 'professionnel') { %>
+                            <p><strong>Raison sociale:</strong> <%= client.raison_sociale %></p>
+                        <% } %>
+                        <p><strong>Nom de contact:</strong> <%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %></p>
+                        <p><strong>Prénom de contact:</strong> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></p>
+                        <p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %> <%= client.code_postal %></p>
+                        <p><strong>Ville:</strong> <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %></p>
+                        <p><strong>Email:</strong> <%= client.email %></p>
+                        <p><strong>Téléphone:</strong> <%= client.telephone %></p>
+                        <p><strong>Superficie:</strong> <%= client.superficie.charAt(0).toUpperCase() + client.superficie.slice(1) %></p>
+                        <p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
+                        <p><strong>Type de rénovation:</strong> <%= client.type_renovation.map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') %></p>
+                        <p><strong>Statut fiche client:</strong> <%= client.statutClient.charAt(0).toUpperCase() + client.statutClient.slice(1) %></p>
+                        <p><strong>Statut des travaux:</strong> <%= client.statutTravaux.charAt(0).toUpperCase() + client.statutTravaux.slice(1) %></p>
+                        <p><strong>Notes supplémentaires:</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
+                        <div style="margin-bottom: 30px;">
+                            <strong>Photos:</strong>
+                            <% client.photos.forEach(photo => { %>
+                                <img src="<%= photo %>" alt="Photo du client" style="max-width: 100px;">
+                            <% }) %>
+                        </div>
+                        <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+                        <div class="toastBox">
+                            <h3>Informations commercial</h3>
+                            <p><strong>Nom du commercial:</strong> <%= client.nomCommercial %></p>
+                            <p><strong>Email du commercial:</strong> <%= client.emailCommercial %></p>
+                            <p><strong>Téléphone du commercial:</strong> <%= client.telephonphoneCommercial %></p>
+                        </div>
                     </div>
-                    <p><strong>Commercial:</strong> <%= client.emailCommercial %></p>
-                    <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
                 </div>
             </div>
         </div>

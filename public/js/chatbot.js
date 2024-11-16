@@ -152,8 +152,8 @@ function startConversation() {
 	const botMessage = document.createElement('div');
 	botMessage.className = 'chatbot-message bot';
 	botMessage.innerHTML = `
-		<div class="sender" style="margin-bottom:5px" >Bot Moana Energy</div>
-		Bonjour ! Comment puis-je vous aider aujourd'hui ?
+		<div class="sender" style="margin-bottom:5px">Bot Moana Energy</div>
+		Bonjour ! Je suis un assistant virtuel dédié à répondre aux questions concernant le dashboard de Moana Energy. Comment puis-je vous aider aujourd'hui ?
 		<div class="timestamp" style="margin-top:5px">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
 	`;
 	messages.appendChild(botMessage);
@@ -185,15 +185,38 @@ function addSuggestions() {
 			Object.keys(data).forEach(sectionKey => {
 				const section = data[sectionKey];
 				section.sections.forEach(subSection => {
+					console.log(subSection);
+					
 					const suggestionButton = document.createElement('button');
 					suggestionButton.className = 'chatbot-suggestion-button';
 					suggestionButton.innerText = subSection.title;
 					suggestionButton.addEventListener('click', () => {
-						const refinedMessage = `Pouvez-vous me donner plus d'informations sur ${subSection.title.toLowerCase()} ?`;
-						sendMessage(refinedMessage);
+						sendMessage(subSection.title);
 						scrollToBottom(); // Scroll to bottom when a suggestion is clicked
 					});
 					suggestionsContainer.appendChild(suggestionButton);
+					console.log(subSection.content);
+					
+					// Ajouter les questions de la FAQ en tant que sous-suggestions
+					if (
+						subSection && // Vérifie que subSection existe
+						Array.isArray(subSection.faq) && // Vérifie que content est un tableau
+						subSection.faq.length > 0 && // Vérifie que le tableau n'est pas vide
+						subSection.faq // Vérifie que faq existe dans le premier élément
+					  ) {
+						console.log(subSection);
+						subSection.faq.forEach(faqItem => {
+							const faqButton = document.createElement('button');
+							faqButton.className = 'chatbot-faq-button';
+							faqButton.innerText = faqItem.question;
+							faqButton.style.marginLeft = '20px'; // Indentation pour les sous-suggestions
+							faqButton.addEventListener('click', () => {
+								sendMessage(faqItem.question);
+								scrollToBottom(); // Scroll to bottom when a FAQ question is clicked
+							});
+							suggestionsContainer.appendChild(faqButton);
+						});
+					}
 				});
 			});
 

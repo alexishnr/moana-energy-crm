@@ -20,18 +20,19 @@
     </div>
     <div class="section-block pb-0 container">
         <% if (typeof success !== 'undefined') { %>
-            <% if (success) { %>
+            <% if (success === true) { %>
                 <div class="toastBox alertingGreen">
                     Action effectuée avec succès
                 </div>
-            <% } else { %>
+            <% } else if(success === false) { %>
                 <div class="toastBox alertingRed">
-                    Erreur lors de l'action
+                    Erreur lors de l'action : <%= message %>
                 </div>
             <% } %>
         <% } %>
         <div style="display: flex;align-items: center;justify-content: center; margin-bottom: 50px;">
             <div class="unique-contact-form" style="max-width: unset;">
+                <h2>Formulaire d'ajout d'utilisateur</h2>
                 <form action="/auth/add-user" method="POST">
                     <label for="nom">Nom:</label>
                     <input type="text" id="nom" name="nom" required>
@@ -39,6 +40,8 @@
                     <input type="text" id="prenom" name="prenom" required>
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
+                    <label for="email">Téléphone:</label>
+                    <input type="tel" id="telephone" name="telephone" required>
                     <label for="expirationDate">Date d'expiration:</label>
                     <input type="date" id="expirationDate" name="expirationDate" required>
                     <label for="isSuperUser">Super Utilisateur:</label>

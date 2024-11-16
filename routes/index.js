@@ -4,9 +4,31 @@ const nodemailer = require('nodemailer');
 const clean = require('xss-clean/lib/xss').clean;
 const axios = require('axios');
 const multer = require('multer');
+const OpenAI = require('openai');
 const { isAuthenticated } = require('../middleware/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const admin = require('firebase-admin');
+const path = require('path');
+const { name } = require('ejs');
+const { confirmationTemplate, transmissionTemplate } = require('../templates/emailTemplates');
+
+
+const openai = new OpenAI({
+  apiKey: "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", // Assurez-vous que cette variable d'environnement est définie
+  organization: "org-oJwf2tTC0edXdcWF1QXQ70AU",
+  project: "proj_EmUpnkF67t5Kfvk58rR855Qm",
+});
+
+const siteContentPath = path.join(__dirname, '../public/js/siteContent.json');
+let siteContent = {};
+
+try {
+  const siteContentData = fs.readFileSync(siteContentPath, 'utf8');
+  siteContent = JSON.parse(siteContentData);
+} catch (error) {
+  console.error('Erreur lors du chargement du fichier siteContent.json:', error);
+}
+
 
 // Vérifiez si l'application Firebase a déjà été initialisée
 if (!admin.apps.length) {
@@ -68,16 +90,16 @@ router.get('/ajouter-client', isAuthenticated, function(req, res, next) {
 });
 
 router.post('/add-client', isAuthenticated, upload.array('photos', 10), async function(req, res, next) {
-  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, workStatus } = req.body;
+  const { type_client, raison_sociale, nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment } = req.body;
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
 
   try {
     // Ajouter le client à Firestore
     await db.collection('clients').add({
+      type_client,
+      raison_sociale: type_client === 'professionnel' ? raison_sociale : null,
       nom,
       prenom,
-      idCommercial: req.session.userId, // Ajouter l'ID de l'utilisateur connecté
-      emailCommercial: req.session.userEmail, // Ajouter l'email de l'utilisateur connecté
       adresse,
       ville,
       code_postal,
@@ -88,14 +110,18 @@ router.post('/add-client', isAuthenticated, upload.array('photos', 10), async fu
       superficie,
       type_batiment,
       photos,
-      status: 'en attente',
-      workStatus: 'premier contact',
-      createdAt: new Date().toISOString() // Stocker la date en format ISO
+      statutClient: 'en attente',
+      statutTravaux: 'premier contact',
+      createdAt: new Date().toISOString(), // Stocker la date en format ISO
+      idCommercial: req.session.userId, // Ajouter l'ID de l'utilisateur connecté
+      emailCommercial: req.session.userEmail, // Ajouter l'email de l'utilisateur connecté
+      telephoneCommercial: req.session.userPhone, // Ajouter l'email de l'utilisateur connecté
+      nomCommercial: req.session.userDisplayName // Ajouter le nom de l'utilisateur connecté
     });
-    res.redirect('/ajouter-client?success=true');
+    res.render('add-clients', { success: true, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de l\'ajout du client:', error);
-    res.redirect('/ajouter-client?success=false');
+    res.render('add-clients', { success: false, pendingClientsCount: res.locals.pendingClientsCount, message: error.message });
   }
 });
 
@@ -172,73 +198,7 @@ router.post('/client/:id/schedule', isAuthenticated, async function(req, res, ne
       from: process.env.USER_EMAIL,
       to: client.email,
       subject: `Confirmation de rendez-vous avec Moana Energy`,
-      html: `
-        <!DOCTYPE html>
-        <html lang="fr">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Confirmation de rendez-vous</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              color: #333;
-              margin: 0;
-              padding: 0;
-              background-color: #f7f7f7;
-            }
-            .container {
-              width: 100%;
-              max-width: 600px;
-              margin: 20px auto;
-              background-color: #ffffff;
-              border-radius: 8px;
-              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-              padding: 20px;
-            }
-            .header {
-              background-color: #0D47A1;
-              color: white;
-              padding: 10px;
-              text-align: center;
-              border-radius: 8px 8px 0 0;
-            }
-            .content {
-              padding: 20px;
-            }
-            .content h3 {
-              color: #0D47A1;
-            }
-            .footer {
-              text-align: center;
-              padding: 10px;
-              font-size: 12px;
-              color: #777;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h2>Confirmation de rendez-vous</h2>
-            </div>
-            <div class="content">
-              <p>Bonjour ${client.prenom} ${client.nom},</p>
-              <p>Nous vous confirmons votre rendez-vous avec Moana Energy.</p>
-              <p><strong>Date :</strong> ${date}</p>
-              <p><strong>Heure :</strong> ${time}</p>
-              <p>Adresse : ${client.adresse}, ${client.ville} ${client.code_postal}</p>
-              <p>Nous restons à votre disposition pour toute information complémentaire.</p>
-              <p>Cordialement,</p>
-              <p>L'équipe Moana Energy</p>
-            </div>
-            <div class="footer">
-              <p>Ce message vous a été envoyé via le système de gestion de rendez-vous de Moana Energy.</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `,
+      html: confirmationTemplate(client, date, time),
     };
 
     // Envoi de l'email avec nodemailer
@@ -248,9 +208,9 @@ router.post('/client/:id/schedule', isAuthenticated, async function(req, res, ne
         return res.redirect(`/client/${clientId}/schedule?success=false`);
       } else {
         console.log('Email envoyé : ' + info.response);
-        // Mettre à jour le workStatus à "rendez-vous planifié"
+        // Mettre à jour le statutTravaux à "rendez-vous planifié"
         await db.collection('clients').doc(clientId).update({
-          workStatus: 'rendez-vous planifié'
+          statutTravaux: 'rendez-vous planifié'
         });
         res.redirect(`/client/${clientId}/schedule?success=true`);
       }
@@ -282,86 +242,9 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
 
     const mailOptions = {
       from: process.env.USER_EMAIL,
-      to: process.env.USER_EMAIL,
+      to: process.env.USER_EMAIL_DDER,
       subject: `Transmission de la fiche client pour ${client.nom} ${client.prenom}`,
-      html: `
-        <!DOCTYPE html>
-        <html lang="fr">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Transmission de la fiche client</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              color: #333;
-              margin: 0;
-              padding: 0;
-              background-color: #f7f7f7;
-            }
-            .container {
-              width: 100%;
-              max-width: 600px;
-              margin: 20px auto;
-              background-color: #ffffff;
-              border-radius: 8px;
-              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-              padding: 20px;
-            }
-            .header {
-              background-color: #0D47A1;
-              color: white;
-              padding: 10px;
-              text-align: center;
-              border-radius: 8px 8px 0 0;
-            }
-            .content {
-              padding: 20px;
-            }
-            .content h3 {
-              color: #0D47A1;
-            }
-            .footer {
-              text-align: center;
-              padding: 10px;
-              font-size: 12px;
-              color: #777;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h2>Transmission de la fiche client</h2>
-            </div>
-            <div class="content">
-              <p>Bonjour,</p>
-              <p>Veuillez trouver ci-dessous les informations du client :</p>
-              <p><strong>Nom :</strong> ${client.nom}</p>
-              <p><strong>Prénom :</strong> ${client.prenom}</p>
-              <p><strong>Adresse :</strong> ${client.adresse}, ${client.ville} ${client.code_postal}</p>
-              <p><strong>Email :</strong> ${client.email}</p>
-              <p><strong>Téléphone :</strong> ${client.telephone}</p>
-              <p><strong>Superficie :</strong> ${client.superficie}</p>
-              <p><strong>Type de bâtiment :</strong> ${client.type_batiment}</p>
-              <p><strong>Type de rénovation :</strong> ${client.type_renovation}</p>
-              <p><strong>Notes :</strong> ${client.notes}</p>
-              <p><strong>Statut :</strong> ${client.status}</p>
-              <p><strong>Statut des travaux :</strong> ${client.workStatus}</p>
-              <div>
-                <strong>Photos :</strong>
-                ${client.photos.map(photo => `<img src="${photo}" alt="Photo du client" style="max-width: 100px;">`).join('')}
-              </div>
-              <p><strong>Commercial :</strong> ${client.emailCommercial}</p>
-              <p><strong>Date de création :</strong> ${new Date(client.createdAt).toLocaleDateString('fr-FR')}</p>
-            </div>
-            <div class="footer">
-              <p>Ce message vous a été envoyé via le système de gestion de Moana Energy.</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `,
+      html: transmissionTemplate(client),
     };
 
     // Envoi de l'email avec nodemailer
@@ -373,7 +256,7 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
         console.log('Email envoyé : ' + info.response);
         // Mettre à jour le statut à "transmise"
         await db.collection('clients').doc(clientId).update({
-          status: 'transmise'
+          statutClient: 'Fiche transmise'
         });
         res.redirect(`/client/${clientId}?success=true`);
       }
@@ -387,7 +270,7 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
 // Route pour modifier un client
 router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('photos', 10), async function(req, res, next) {
   const clientId = req.params.id;
-  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, workStatus } = req.body;
+  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, statutTravaux } = req.body;
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
   try {
     // Mettre à jour le client dans Firestore
@@ -405,7 +288,7 @@ router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('phot
       type_batiment,
       photos,
       status,
-      workStatus,
+      statutTravaux,
       updatedAt: new Date().toISOString() // Stocker la date en format ISO
     });
     res.redirect(`/client/${clientId}?success=true`);
@@ -419,8 +302,8 @@ router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('phot
 async function isSuperUser(req, res, next) {
   if (req.session && req.session.userId) {
     try {
-      const userDoc = await db.collection('super-users').doc(req.session.userEmail).get();
-      if (userDoc.exists && userDoc.data().isSuperUser) {
+      const userDoc = await db.collection('users').doc(req.session.userId).get();
+      if (userDoc.exists && userDoc.data().isSuperUser === true) {
         return next();
       }
     } catch (error) {
@@ -445,7 +328,61 @@ router.get('/clients-en-attente', isAuthenticated, isSuperUser, async function(r
 });
 
 router.get('/add-user', isAuthenticated, isSuperUser, async function(req, res, next) {
+  console.log(req);
+  console.log(typeof req.query.success);
+
     res.render('add-user', { success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount });
+});
+
+// Route pour la FAQ
+router.get('/faq', function(req, res, next) {
+  res.render('faq', { title: 'FAQ - Dashboard Moana Energy' });
+});
+
+// Route pour le chatbot
+router.post('/chatbot', async function(req, res) {
+  const userMessage = req.body.message.toLowerCase();
+
+  try {
+    // Vérifiez si la question de l'utilisateur correspond à une question de la FAQ
+    let faqResponse = null;
+    Object.keys(siteContent).forEach(sectionKey => {
+      const section = siteContent[sectionKey];
+      section.sections.forEach(subSection => {
+        if (subSection.content && subSection.content[0].faq) {
+          subSection.content[0].faq.forEach(faqItem => {
+            if (userMessage.includes(faqItem.question.toLowerCase())) {
+              faqResponse = faqItem.answer;
+            }
+          });
+        }
+      });
+    });
+
+    if (faqResponse) {
+      return res.json({ response: faqResponse });
+    }
+
+    // Si aucune réponse FAQ n'est trouvée, utilisez l'API OpenAI
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: "user", content: userMessage },
+        { role: "system", content: `use as much as you can the Site Content: ${JSON.stringify(siteContent)}` },
+        {
+          "role": "system",
+          "content": "Vous êtes un assistant dédié au dashboard de Moana Energy. Vous répondez uniquement aux questions sur les fonctionnalités suivantes : ajouter des clients, suivre les fiches, utiliser les filtres, transmettre une fiche, et planifier un rendez-vous. Si une question est hors sujet, répondez : 'Je suis désolé, je ne peux répondre qu'aux questions concernant le dashboard de Moana Energy.'"
+        }
+      ],
+      model: "gpt-3.5-turbo",
+      max_tokens: 200
+    });
+
+    const botResponse = completion.choices[0].message.content.trim();
+    res.json({ response: botResponse });
+  } catch (error) {
+    console.error('Erreur lors de la communication avec l\'API de ChatGPT:', error.response ? error.response.data : error.message);
+    res.json({ response: "Je suis désolé, je ne comprends pas votre demande." });
+  }
 });
 
 module.exports = router;
