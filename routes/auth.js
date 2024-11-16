@@ -41,9 +41,11 @@ router.get('/login', (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const auth = getAuth(firebaseApp);
+console.log(email, password);
 
   signInWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
+      console.log(userCredential);
       
       // Signed in
       var user = userCredential.user;
