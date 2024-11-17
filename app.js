@@ -46,8 +46,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuration pour les proxys (ex. : Heroku)
-app.set('trust proxy', 1); // Nécessaire pour les cookies sécurisés derrière un proxy
-
+app.set('trust proxy', true)
 // Configuration du middleware de session
 app.use(session({
   secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Utilisez une valeur sécurisée
