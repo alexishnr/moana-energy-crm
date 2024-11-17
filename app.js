@@ -49,12 +49,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('trust proxy', 1); // Nécessaire pour que les cookies sécurisés fonctionnent derrière un proxy (Heroku)
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Utilisez un secret robuste
   resave: false,
-  saveUninitialized: true,
-  proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
-  name: 'MoanaEnergy', // This needs to be unique per-host.
-  cookie: { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 48, sameSite: 'lax' }
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Utilisé uniquement en production
+    httpOnly: true, // Empêche les scripts JavaScript d'accéder aux cookies
+    sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // 'none' pour cross-origin
+    domain: process.env.NODE_ENV === 'production' ? '.moanaenergy.com' : undefined, // Appliqué uniquement en prod
+    maxAge: 24 * 60 * 60 * 1000, // Durée de vie : 1 jour,
+    sameSite: 'lax'
+  }
 }));
 
 // Synchronisation avec NTP (facultatif, utile pour le débogage)
@@ -70,7 +75,7 @@ ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
 // Vérification des sessions pour le débogage
 app.use((req, res, next) => {
   if (req.session) {
-    console.log('Session actuelle:', req.session);
+    // console.log('Session actuelle:', req.session);
   }
   next();
 });

@@ -3955,6 +3955,21 @@ only screen and (				min-resolution: 2dppx) {
 	background-color: #D5D5DA;
 }
 
+.notification-bubble {
+	display: block;
+	background-color: #0D47A1;
+	color: white;
+	border-radius: 50%;
+	padding: 2px 6px;
+	font-size: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	margin-left: 5px;
+}
+
 @keyframes typing {
 	0%, 60%, 100% {
 		transform: translateY(0);

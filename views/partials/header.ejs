@@ -19,7 +19,9 @@
                     <li><a href="/ajouter-client">Ajouter un client</a></li>
                     <% if (pendingClientsCount && session.isSuperUser) { %>
                         <li style="position: relative;">
-                            <a style="display: flex;" href="/clients-en-attente">Clients en attente <span class="notification-bubble"><%= pendingClientsCount %></span></a>
+                            <a style="display: flex;" href="/clients-en-attente">Clients en attente  <% if (pendingClientsCount && pendingClientsCount > 0) { %>
+                                <span class="notification-bubble"><%= pendingClientsCount %></span>
+                                <% } %></a>
                             
                         </li>
                     <li><a href="/add-user">Ajouter un utilisateur</a></li>
