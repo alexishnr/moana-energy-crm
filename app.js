@@ -44,6 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Permet de gérer les formulaires
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('trust proxy', 1); // Requis pour que les cookies sécurisés fonctionnent correctement derrière un proxy
 
 // Configuration du middleware de session
 app.use(session({
@@ -78,6 +79,8 @@ app.use('/auth', authRouter);
 
 // Middleware pour vérifier si l'utilisateur est connecté
 function isAuthenticated(req, res, next) {
+  console.log(req.session);
+  
   if (req.session && req.session.userId) {
     req.session._garbage = Date();
     req.session.touch();
