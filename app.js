@@ -7,7 +7,7 @@ var logger = require('morgan');
 const session = require('express-session');
 const admin = require('firebase-admin');
 
-// Vérifiez si l'application Firebase a déjà été initialisée
+// Initialisation de Firebase Admin SDK
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
@@ -37,29 +37,34 @@ const ejsLayout = require("express-ejs-layouts");
 app.use(ejsLayout);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-require("dotenv").config();
-console.log(process.env.PORT); // Affiche la valeur de PORT définie dans .env
+
+console.log(process.env.PORT); // Vérifiez que la variable PORT est définie
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Permet de gérer les formulaires
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('trust proxy', 1); // Requis pour que les cookies sécurisés fonctionnent correctement derrière un proxy
+
+// Configuration pour les proxys (ex. : Heroku)
+app.set('trust proxy', 1); // Nécessaire pour les cookies sécurisés derrière un proxy
 
 // Configuration du middleware de session
 app.use(session({
-  secret: 'votre_secret_de_session', // Ajoutez un secret pour signer les cookies de session
+  secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Remplacez par une valeur sécurisée en prod
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false, // Ne pas créer de session inutilement
+  sameSite : "none",
+  secure: true,
+  domain: "dashboard.moanaenergy.com",
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // 'true' en production, 'false' en développement
-    httpOnly: true, // Empêche les scripts JavaScript d'accéder aux cookies pour plus de sécurité
-    maxAge: 24 * 60 * 60 * 1000 // Durée de vie du cookie (1 jour ici, ajustez selon vos besoins)
+    secure: process.env.NODE_ENV === 'production', // Activer uniquement en production avec HTTPS
+    httpOnly: true, // Empêche l'accès JavaScript
+    maxAge: 24 * 60 * 60 * 1000 // Durée de vie : 1 jour
   }
 }));
 
+// Synchronisation avec NTP (facultatif, utile pour le débogage)
 const ntpClient = require('ntp-client');
-
 ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
   if (err) {
     console.error("Erreur de connexion au serveur NTP:", err);
@@ -68,25 +73,25 @@ ntpClient.getNetworkTime("pool.ntp.org", 123, (err, date) => {
   console.log("Heure exacte:", date);
 });
 
+// Vérification des sessions pour le débogage
 app.use((req, res, next) => {
   if (req.session) {
-    // console.log('Session:', req.session);
+    console.log('Session actuelle:', req.session);
   }
   next();
 });
 
+// Routes
 app.use('/auth', authRouter);
 
-// Middleware pour vérifier si l'utilisateur est connecté
+// Middleware pour vérifier si l'utilisateur est authentifié
 function isAuthenticated(req, res, next) {
-  console.log(req.session);
-  
-  if (req.session && req.session.userId) {
-    req.session._garbage = Date();
+if (req.session && req.session.userId) {
+    // Maintenir la session active
     req.session.touch();
     return next();
   }
-  res.redirect('/auth/login'); // Assurez-vous que la redirection est correcte
+  res.redirect('/auth/login'); // Redirection vers la page de connexion
 }
 
 app.use('/', isAuthenticated, indexRouter);
