@@ -3,7 +3,6 @@ const router = express.Router();
 const nodemailer = require('nodemailer');
 const clean = require('xss-clean/lib/xss').clean;
 const multer = require('multer');
-const { isAuthenticated } = require('../middleware/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const admin = require('firebase-admin');
 const { confirmationTemplate, transmissionTemplate } = require('../templates/emailTemplates');
@@ -430,5 +429,27 @@ router.post('/chatbot', async function(req, res) {
     res.json({ response: "Je suis désolé, je ne comprends pas votre demande." });
   }
 });
+
+async function isAuthenticated(req, res, next) {
+  if (req.session && req.session.userId) {
+    const userDoc = await db.collection('users').doc(req.session.userId).get();
+    if (userDoc.exists) {
+      const user = userDoc.data();
+      const today = new Date();
+
+      if (user.isSuperUser || new Date(user.expirationDate) >= today) {
+        console.log("authenticated");
+        req.session._garbage = Date();
+        req.session.touch();
+        return next();
+      } else {
+        console.log("account expired");
+        return res.redirect('/auth/login?message=Votre compte a expiré.');
+      }
+    }
+  }
+  console.log("not authenticated");
+  res.redirect('/auth/login');
+}
 
 module.exports = router;

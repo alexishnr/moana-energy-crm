@@ -3,7 +3,7 @@ const router = express.Router();
 const clean = require('xss-clean/lib/xss').clean;
 const { getFirestore } = require('firebase-admin/firestore');
 const { initializeApp, getApps } = require('firebase/app');
-const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
+const { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } = require('firebase/auth');
 const firebaseConfig = require('../firebase'); // Assurez-vous que le fichier de configuration Firebase est correctement importé
 const admin = require('firebase-admin');
 const { isAuthenticated, isSuperUser } = require('../middleware/auth');
@@ -70,6 +70,44 @@ console.log(email, password);
       console.error('Erreur lors de la connexion de l\'utilisateur:', errorMessage);
       res.render('login', { title: 'Connexion', error: errorMessage });
     });
+});
+
+// Page de mot de passe oublié
+router.get('/forgot-password', (req, res) => {
+  res.render('forgot-password', { title: 'Mot de passe oublié' });
+});
+
+// Traitement du formulaire de mot de passe oublié
+router.post('/forgot-password', async (req, res) => {
+  const { email } = clean(req.body);
+
+  try {
+    // Envoie l'email de réinitialisation du mot de passe
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, email).then(() => {
+      // Password reset email sent!
+      res.render('forgot-password', {
+        title: 'Mot de passe oublié',
+        success: true,
+        message: 'Un email de réinitialisation a été envoyé. Veuillez vérifier votre boîte de réception.',
+      });
+    })   
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email de réinitialisation :', error.message);
+
+    let errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
+    if (error.code === 'auth/user-not-found') {
+      errorMessage = 'Aucun utilisateur trouvé avec cet email.';
+    } else if (error.code === 'auth/invalid-email') {
+      errorMessage = 'L\'adresse email saisie n\'est pas valide.';
+    }
+
+    res.render('forgot-password', {
+      title: 'Mot de passe oublié',
+      success: false,
+      message: errorMessage,
+    });
+  }
 });
 
 // Route pour afficher le formulaire d'ajout d'utilisateur
