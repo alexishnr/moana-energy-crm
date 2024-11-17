@@ -52,6 +52,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Utilisez une valeur sécurisée
   resave: false,
   saveUninitialized: false, // Ne pas créer de session inutilement
+  proxy: true, // Activer les cookies sécurisés
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Activer uniquement en production avec HTTPS
     httpOnly: true, // Empêche l'accès JavaScript
