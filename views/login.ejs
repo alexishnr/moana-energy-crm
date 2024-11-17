@@ -17,7 +17,7 @@
     <% if (typeof error !== 'undefined') { %>
         <p style="color: red;"><%= error %></p>
       <% } %>
-      <form action="/auth/login" method="post">
+      <form action="/auth/login" method="post" style="margin-bottom: 15px;">
         <div>
           <label for="email">Email :</label>
           <input type="text" id="email" name="email" required>
@@ -26,10 +26,10 @@
           <label for="password">Mot de passe :</label>
           <input type="password" id="password" name="password" required>
         </div>
-        <a type="submit" class="cta-button" style="margin-right: 10px;">Se connecter</a>
+        <button class="cta-button" style="margin-right: 10px;">Se connecter</button>
+        </form>
         <a href="/auth/forgot-password">Mot de passe oublié ?</a>
-    </form>
-            </div>
+        </div>
         </div>
     </section>
 </div>
