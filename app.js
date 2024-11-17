@@ -50,15 +50,14 @@ app.set('trust proxy', 1); // Nécessaire pour les cookies sécurisés derrière
 
 // Configuration du middleware de session
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Remplacez par une valeur sécurisée en prod
+  secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Utilisez une valeur sécurisée
   resave: false,
   saveUninitialized: false, // Ne pas créer de session inutilement
-  sameSite : "none",
-  secure: true,
-  domain: "moanaenergy.com",
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Activer uniquement en production avec HTTPS
     httpOnly: true, // Empêche l'accès JavaScript
+    sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // 'none' pour les cookies cross-origin
+    domain: process.env.NODE_ENV === 'production' ? '.moanaenergy.com' : undefined, // Sous-domaine en production
     maxAge: 24 * 60 * 60 * 1000 // Durée de vie : 1 jour
   }
 }));
