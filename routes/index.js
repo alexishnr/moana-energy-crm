@@ -46,6 +46,8 @@ const upload = multer({ storage: storage });
 router.use(async (req, res, next) => {
   res.locals.session = req.session;
   res.locals.pendingClientsCount = 0; // Initialiser la variable
+  res.locals.uniformButtonClass = 'uniform-button'; // Ajouter la classe CSS
+  res.locals.uniformLinkClass = 'uniform-link'; // Ajouter la classe CSS
   if (req.session.isSuperUser) {
     try {
       const pendingClientsSnapshot = await db.collection('clients').where('statutClient', '==', 'en attente').get();

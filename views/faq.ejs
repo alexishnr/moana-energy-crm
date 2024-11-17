@@ -24,7 +24,7 @@
                     <!-- Ajouter des clients -->
                     <h3>Ajouter des clients</h3>
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Quels sont les champs nécessaires pour ajouter un client sur le dashboard ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Pourquoi le formulaire d’ajout de client ne fonctionne-t-il pas ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Puis-je modifier une fiche client après l’avoir ajoutée ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -69,7 +69,7 @@
                     <!-- Suivre les fiches des clients -->
                     <h3>Suivre les fiches des clients</h3>
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Comment identifier une fiche validée sur le dashboard ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Que signifie le statut "transmise" dans une fiche client ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -98,7 +98,7 @@
                     <!-- Filtrer et trier des clients -->
                     <h3>Filtrer et trier des clients</h3>
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Comment utiliser les filtres pour trouver un client rapidement ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -114,7 +114,7 @@
                     <!-- Contacter le support technique -->
                     <h3>Support technique</h3>
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Quand dois-je contacter le support technique ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -128,7 +128,7 @@
                     </div>
 
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Comment contacter le support technique ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -144,7 +144,7 @@
                     <!-- Transmettre une fiche à DDER -->
                     <h3>Transmettre une fiche à DDER</h3>
                     <div class="faq-item">
-                        <button class="faq-question">
+                        <button class="faq-question uniform-button">
                             Comment transmettre une fiche client à DDER ? <span class="arrow">⬇️</span>
                         </button>
                         <div class="faq-answer">
@@ -166,6 +166,15 @@
 <!-- Content End -->
 
 <div style="height: 1px;width: 50vw;margin:auto;background-color: rgb(79, 79, 79, 0.2);"></div>
+
+<style>
+    .uniform-button, .uniform-link {
+        height: 50px; /* Définir la hauteur souhaitée */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
 
 <script>
     document.querySelectorAll('.faq-question').forEach(button => {

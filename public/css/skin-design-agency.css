@@ -4071,4 +4071,10 @@ select {
 	}
 	}
 
-	
+	.secondary-btn{
+		background-color: #666666;
+	}
+
+	.secondary-btn:hover{
+		background-color: #666666;
+	}

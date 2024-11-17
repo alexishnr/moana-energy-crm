@@ -22,7 +22,7 @@
         <div class="row">
             <div class="colum">
                 <div>
-                    <button onclick="toggleFilters()">Afficher/Masquer les filtres</button>
+                    <button onclick="toggleFilters()" class="uniform-button">Afficher/Masquer les filtres</button>
                     <div id="filters" style="display: none;">
                         <!-- Filtre par ville -->
                         <select id="filterVille" onchange="filterClients()">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div>
-                    <button onclick="toggleSort()">Afficher/Masquer le tri</button>
+                    <button onclick="toggleSort()" class="uniform-button">Afficher/Masquer le tri</button>
                     <div id="sort" style="display: none;">
                         <select id="sortOptions" onchange="sortClients()">
                             <option value="nom">Trier par nom</option>
