@@ -46,19 +46,18 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuration pour les proxys (ex. : Heroku)
-app.set('trust proxy', true)
-// Configuration du middleware de session
+app.set('trust proxy', 1); // Nécessaire pour que les cookies sécurisés fonctionnent derrière un proxy (Heroku)
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'votre_secret_de_session', // Utilisez une valeur sécurisée
+  secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false, // Ne pas créer de session inutilement
-  proxy: true, // Activer les cookies sécurisés
+  saveUninitialized: true,
+  proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
+  name: 'MyCoolWebAppCookieName', // This needs to be unique per-host.
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Activer uniquement en production avec HTTPS
-    httpOnly: true, // Empêche l'accès JavaScript
-    sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // 'none' pour les cookies cross-origin
-    domain: process.env.NODE_ENV === 'production' ? '.moanaenergy.com' : undefined, // Sous-domaine en production
-    maxAge: 24 * 60 * 60 * 1000 // Durée de vie : 1 jour
+    secure: true, // required for cookies to work on HTTPS
+    httpOnly: false,
+    sameSite: 'none'
   }
 }));
 
