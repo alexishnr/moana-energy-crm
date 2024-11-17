@@ -42,10 +42,11 @@
                 <div style="margin-bottom: 50px;">
                     <% if (isSuperUser) { %>
                         <a id="editButton" style="margin: 0;margin-bottom: 5px; background-color: #666666;" class="cta-button" onclick="toggleEditMode()">Modifier la fiche</a>
+                        <a id="cancelButton" style="margin: 0;margin-bottom: 5px; background-color: #666666; display: none;" class="cta-button" onclick="cancelEditMode()">Annuler</a>
                     <% } %>
                     <% if (client.statutClient !== 'en attente') { %>
-                    <a href="/client/<%= client.id %>/schedule" class="cta-button" style="margin: 0;margin-bottom: 5px;">Programmer un rendez-vous</a>
-                    <button class="cta-button" onclick="confirmSendToDDER()">Transmettre la fiche à DDER</button>
+                    <a href="/client/<%= client.id %>/schedule" class="cta-button client-cta" style="margin: 0;margin-bottom: 5px;">Programmer un rendez-vous</a>
+                    <button class="cta-button client-cta" onclick="confirmSendToDDER()">Transmettre la fiche à DDER</button>
                     <% } %>
                 </div>
                 <form id="clientForm" action="/client/<%= client.id %>/edit" method="POST" enctype="multipart/form-data" style="display: none;">
@@ -218,6 +219,16 @@
         document.getElementById('clientForm').style.display = 'block';
         document.getElementById('clientDetails').style.display = 'none';
         document.getElementById('editButton').style.display = 'none';
+        document.getElementById('cancelButton').style.display = 'inline-block';
+        document.querySelectorAll('.client-cta').forEach(button => button.style.display = 'none');
+    }
+
+    function cancelEditMode() {
+        document.getElementById('clientForm').style.display = 'none';
+        document.getElementById('clientDetails').style.display = 'block';
+        document.getElementById('editButton').style.display = 'inline-block';
+        document.getElementById('cancelButton').style.display = 'none';
+        document.querySelectorAll('.client-cta').forEach(button => button.style.display = 'inline-block');
     }
 
     function toggleFields() {
