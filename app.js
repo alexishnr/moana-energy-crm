@@ -54,7 +54,7 @@ app.use(session({
   saveUninitialized: true,
   proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
   name: 'MoanaEnergy', // This needs to be unique per-host.
-  cookie: { httpOnly: true, secure: false, maxAge: 1000 * 60 * 60 * 48, sameSite: 'none' }
+  cookie: { httpOnly: true, secure: false, maxAge: 1000 * 60 * 60 * 48, sameSite: 'lax' }
 }));
 
 // Synchronisation avec NTP (facultatif, utile pour le débogage)
