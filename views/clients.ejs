@@ -66,6 +66,13 @@
                 </div>
                 <div id="clientsList">
                     <div class="rowBootstrap">
+                        <%if (clients.length === 0) {%>
+                            <div class="col-sm-12">
+                                <div class="toastBox alertingBlue">
+                                    Aucun client trouvé
+                                </div>
+                            </div>
+                        <%}%>
                         <% clients.forEach(client => { %>
                             <div class="col-sm-6 client-card">
                                 <div class="toastBox alertingBlue">

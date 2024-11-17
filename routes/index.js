@@ -59,7 +59,7 @@ router.use(async (req, res, next) => {
 
 // Page d'accueil
 router.get('/', isAuthenticated, async function(req, res, next) {
-  res.render('index', { title: 'Accueil', pendingClientsCount: res.locals.pendingClientsCount });
+  res.render('index', { title: 'Accueil', pendingClientsCount: res.locals.pendingClientsCount, prenom: req.session.user?.prenom });
 });
 
 // Page pour ajouter un client
@@ -68,7 +68,7 @@ router.get('/ajouter-client', isAuthenticated, function(req, res, next) {
 });
 
 router.post('/add-client', isAuthenticated, upload.array('photos', 10), async function(req, res, next) {
-  const { type_client, raison_sociale, nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment } = req.body;
+  const { type_client, raison_sociale, nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment } = clean(req.body);
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
 
   try {
@@ -180,7 +180,7 @@ router.get('/client/:id/schedule', isAuthenticated, async function(req, res, nex
 // Route pour programmer un rendez-vous
 router.post('/client/:id/schedule', isAuthenticated, async function(req, res, next) {
   const clientId = req.params.id;
-  const { date, time } = req.body;
+  const { date, time } = clean(req.body);
   try {
     const clientDoc = await db.collection('clients').doc(clientId).get();
     if (!clientDoc.exists) {
@@ -208,19 +208,23 @@ router.post('/client/:id/schedule', isAuthenticated, async function(req, res, ne
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.error('Erreur lors de l\'envoi de l\'email:', error);
-        return res.redirect(`/client/${clientId}/schedule?success=false`);
+        return res.render('schedule', { client: client, success: false, pendingClientsCount: res.locals.pendingClientsCount, message: error });
+
       } else {
         console.log('Email envoyé : ' + info.response);
-        // Mettre à jour le statutTravaux à "rendez-vous planifié"
+        // Mettre à jour le statutTravaux à "rendez-vous planifié" et ajouter la date de rendez-vous
         await db.collection('clients').doc(clientId).update({
-          statutTravaux: 'rendez-vous planifié'
+          statutTravaux: 'rendez-vous planifié',
+          date_rdv: new Date(`${date}T${time}`).toISOString() // Stocker la date de rendez-vous en format ISO
         });
-        res.redirect(`/client/${clientId}/schedule?success=true`);
+        res.render('schedule', { client: client, success: true, pendingClientsCount: res.locals.pendingClientsCount });
+
       }
     });
   } catch (error) {
     console.error('Erreur lors de la programmation du rendez-vous:', error);
-    res.redirect(`/client/${clientId}/schedule?success=false`);
+    res.render('schedule', { client: client, success: false, pendingClientsCount: res.locals.pendingClientsCount, message: error });
+
   }
 });
 
@@ -273,7 +277,7 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
 // Route pour modifier un client
 router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('photos', 10), async function(req, res, next) {
   const clientId = req.params.id;
-  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, statutClient, statutTravaux } = req.body;
+  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, statutClient, statutTravaux, raison_sociale } = clean(req.body);
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
 
   // Filtrer les valeurs undefined
@@ -292,22 +296,35 @@ router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('phot
     photos,
     statutClient,
     statutTravaux,
+    raison_sociale,
     updatedAt: new Date().toISOString() // Stocker la date en format ISO
   };
 
-  // Object.keys(updateData).forEach(key => {
-  //   if (updateData[key] === undefined) {
-  //     delete updateData[key];
-  //   }
-  // });
+  Object.keys(updateData).forEach(key => {
+    if (updateData[key] === undefined) {
+      delete updateData[key];
+    }
+  });
 
   try {
     // Mettre à jour le client dans Firestore
     await db.collection('clients').doc(clientId).update(updateData);
-    res.redirect(`/client/${clientId}?success=true`);
+    console.log('Client mis à jour avec succès');
+    // Récupérez les données mises à jour
+    const updatedClientDoc = await db.collection('clients').doc(clientId).get();
+    
+    if (!updatedClientDoc.exists) {
+      throw new Error(`Le client avec l'ID ${clientId} n'existe pas.`);
+    }
+    
+    // Construit l'objet client à partir des données récupérées
+    const client = { id: updatedClientDoc.id, ...updatedClientDoc.data() };
+
+
+    res.render('client', { title: 'Fiche Client', client, isSuperUser: req.session.isSuperUser, success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de la mise à jour du client:', error);
-    res.redirect(`/client/${clientId}?success=false`);
+    res.render('client', { title: 'Fiche Client', client, isSuperUser: req.session.isSuperUser, success: req.query.success, pendingClientsCount: res.locals.pendingClientsCount, message:error });
   }
 });
 

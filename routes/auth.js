@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const clean = require('xss-clean/lib/xss').clean;
 const { getFirestore } = require('firebase-admin/firestore');
 const { initializeApp, getApps } = require('firebase/app');
 const { getAuth, signInWithEmailAndPassword } = require('firebase/auth');
@@ -39,7 +40,7 @@ router.get('/login', (req, res) => {
 
 // Connexion
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = clean(req.body);
   const auth = getAuth(firebaseApp);
 console.log(email, password);
 
@@ -60,6 +61,7 @@ console.log(email, password);
         req.session.isSuperUser = false;
         req.session.userPhone = userDoc.data().telephone;
       }
+      req.session.user = userDoc.data();
       res.redirect('/');
     })
     .catch((error) => {
@@ -79,7 +81,7 @@ router.get('/add-user', isAuthenticated, isSuperUser, (req, res) => {
 
 // Route pour ajouter un utilisateur
 router.post('/add-user', isAuthenticated, isSuperUser, async (req, res) => {
-  const { nom, prenom, email, expirationDate, isSuperUser, telephone } = req.body;
+  const { nom, prenom, email, expirationDate, isSuperUser, telephone } = clean(req.body);
 
   let userRecord = null; // Déclare userRecord dans un contexte global à la fonction
 

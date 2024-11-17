@@ -41,7 +41,7 @@
             <div class="column width-12">
                 <div style="margin-bottom: 50px;">
                     <% if (isSuperUser) { %>
-                        <a id="editButton" style="margin: 0;margin-bottom: 5px;" class="cta-button" onclick="toggleEditMode()">Modifier la fiche</a>
+                        <a id="editButton" style="margin: 0;margin-bottom: 5px; background-color: #666666;" class="cta-button" onclick="toggleEditMode()">Modifier la fiche</a>
                     <% } %>
                     <% if (client.statutClient !== 'en attente') { %>
                     <a href="/client/<%= client.id %>/schedule" class="cta-button" style="margin: 0;margin-bottom: 5px;">Programmer un rendez-vous</a>
@@ -143,7 +143,7 @@
                     </div>
                     <button type="submit" id="saveButton" class="unique-submit-btn">Mettre à jour le client</button>
                 </form>
-                <div id="sendToDDERConfirmation" style="display: none; margin-top: 20px;">
+                <div id="sendToDDERConfirmation" style="display: none; margin-top: 20px;margin-bottom: 30px;">
                     <p>Êtes-vous sûr de vouloir transmettre la fiche à DDER ?</p>
                     <button class="cta-button" onclick="sendToDDER('<%= client.id %>')">Confirmer</button>
                     <button class="cta-button" onclick="cancelSendToDDER()">Annuler</button>
@@ -157,39 +157,48 @@
                                 <%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %>
                             <% } %>
                         </h2>
-                        <p><strong>Type de client:</strong> <%= client.type_client.charAt(0).toUpperCase() + client.type_client.slice(1) %></p>
+                        <p><strong>Type de client :</strong> <%= client.type_client.charAt(0).toUpperCase() + client.type_client.slice(1) %></p>
                         <% if (client.type_client === 'professionnel') { %>
-                            <p><strong>Raison sociale:</strong> <%= client.raison_sociale %></p>
+                            <p><strong>Raison sociale :</strong> <%= client.raison_sociale %></p>
                         <% } %>
-                        <p><strong>Nom de contact:</strong> <%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %></p>
-                        <p><strong>Prénom de contact:</strong> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></p>
-                        <p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %> <%= client.code_postal %></p>
-                        <p><strong>Ville:</strong> <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %></p>
-                        <p><strong>Email:</strong> <%= client.email %></p>
-                        <p><strong>Téléphone:</strong> <%= client.telephone %></p>
-                        <p><strong>Superficie:</strong> <%= client.superficie.charAt(0).toUpperCase() + client.superficie.slice(1) %></p>
-                        <p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
-                        <p><strong>Type de rénovation:</strong> <%= (Array.isArray(client.type_renovation) ? client.type_renovation : (client.type_renovation ? [client.type_renovation] : [])).map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') %></p>
-                        <p><strong>Statut fiche client:</strong> <%= client.statutClient.charAt(0).toUpperCase() + client.statutClient.slice(1) %></p>
-                        <p><strong>Statut des travaux:</strong> <%= client.statutTravaux.charAt(0).toUpperCase() + client.statutTravaux.slice(1) %></p>
-                        <p><strong>Notes supplémentaires:</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
+                        <p><strong>Nom de contact :</strong> <%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %></p>
+                        <p><strong>Prénom de contact :</strong> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></p>
+                        <p><strong>Adresse :</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %> <%= client.code_postal %></p>
+                        <p><strong>Ville :</strong> <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %></p>
+                        <p><strong>Email :</strong> <%= client.email %></p>
+                        <p><strong>Téléphon e:</strong> <%= client.telephone %></p>
+                        <p><strong>Superficie :</strong> <%= client.superficie.charAt(0).toUpperCase() + client.superficie.slice(1) %></p>
+                        <p><strong>Type de bâtiment :</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
+                        <p><strong>Type de rénovation :</strong> <%= (Array.isArray(client.type_renovation) ? client.type_renovation : (client.type_renovation ? [client.type_renovation] : [])).map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') %></p>
+                        <% if (client.date_rdv) { %>
+                            <p><strong>Date rendez-vous :</strong> <%= new Date(client.date_rdv).toLocaleString('fr-FR', { 
+                                day: '2-digit', 
+                                month: '2-digit', 
+                                year: 'numeric', 
+                                hour: '2-digit', 
+                                minute: '2-digit', 
+                                hour12: false // Assure un format 24 heures
+                            }) %></p>
+                        <% } %>
+                        <p><strong>Statut des travaux :</strong> <%= client.statutTravaux.charAt(0).toUpperCase() + client.statutTravaux.slice(1) %></p>
+                        <p><strong>Notes supplémentaires :</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
                         <div style="margin-bottom: 30px;">
-                            <strong>Photos:</strong>
+                            <strong>Photos :</strong>
                             <% client.photos.forEach(photo => { %>
                                 <img src="<%= photo %>" alt="Photo du client" style="max-width: 100px;">
                             <% }) %>
                         </div>
-                        <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+                        <p><strong>Date de création :</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
                         <div class="toastBox" id="commercialBox" style="padding-right: 10px;padding-left: 10px;">
                             <h3>Informations commercial</h3>
-                            <p><strong>Nom du commercial:</strong> <%= client.nomCommercial %></p>
-                            <p><strong>Email du commercial:</strong> <%= client.emailCommercial %></p>
-                            <p><strong>Téléphone du commercial:</strong> <%= client.telephoneCommercial %></p>
+                            <p><strong>Nom du commercial :</strong> <%= client.nomCommercial %></p>
+                            <p><strong>Email du commercia l:</strong> <%= client.emailCommercial %></p>
+                            <p><strong>Téléphone du commercial :</strong> <%= client.telephoneCommercial %></p>
                         </div>
                     </div>
                     <% if (isSuperUser) { %>
-                        <div style="margin-top: 20px;">
-                            <button id="deleteButton" class="cta-button" style="background-color: rgb(237, 41, 41);" onclick="confirmDelete()">Supprimer le client</button>
+                        <div style="margin-top: 20px">
+                            <button id="deleteButton" class="cta-button" style="background-color: #666666;" onclick="confirmDelete()">Supprimer le client</button>
                         </div>
                         <div id="deleteConfirmation" style="display: none; margin-top: 20px;">
                             <p>Veuillez entrer l'email du commercial pour confirmer la suppression :</p>
