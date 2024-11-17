@@ -55,7 +55,7 @@ app.use(session({
   saveUninitialized: false, // Ne pas créer de session inutilement
   sameSite : "none",
   secure: true,
-  domain: "dashboard.moanaenergy.com",
+  domain: "moanaenergy.com",
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Activer uniquement en production avec HTTPS
     httpOnly: true, // Empêche l'accès JavaScript
