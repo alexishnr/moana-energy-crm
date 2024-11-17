@@ -273,30 +273,37 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
 // Route pour modifier un client
 router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('photos', 10), async function(req, res, next) {
   const clientId = req.params.id;
-  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, statutTravaux, nomCommercial, emailCommercial, telephoneCommercial } = req.body;
+  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, statutClient, statutTravaux } = req.body;
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
+
+  // Filtrer les valeurs undefined
+  const updateData = {
+    nom,
+    prenom,
+    adresse,
+    ville,
+    code_postal,
+    type_renovation,
+    notes,
+    email,
+    telephone,
+    superficie,
+    type_batiment,
+    photos,
+    statutClient,
+    statutTravaux,
+    updatedAt: new Date().toISOString() // Stocker la date en format ISO
+  };
+
+  // Object.keys(updateData).forEach(key => {
+  //   if (updateData[key] === undefined) {
+  //     delete updateData[key];
+  //   }
+  // });
+
   try {
     // Mettre à jour le client dans Firestore
-    await db.collection('clients').doc(clientId).update({
-      nom,
-      prenom,
-      adresse,
-      ville,
-      code_postal,
-      type_renovation,
-      notes,
-      email,
-      telephone,
-      superficie,
-      type_batiment,
-      photos,
-      status,
-      statutTravaux,
-      nomCommercial,
-      emailCommercial,
-      telephoneCommercial,
-      updatedAt: new Date().toISOString() // Stocker la date en format ISO
-    });
+    await db.collection('clients').doc(clientId).update(updateData);
     res.redirect(`/client/${clientId}?success=true`);
   } catch (error) {
     console.error('Erreur lors de la mise à jour du client:', error);

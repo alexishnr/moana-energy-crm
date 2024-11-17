@@ -45,7 +45,7 @@
                     <% } %>
                     <% if (client.statutClient !== 'en attente') { %>
                     <a href="/client/<%= client.id %>/schedule" class="cta-button" style="margin: 0;margin-bottom: 5px;">Programmer un rendez-vous</a>
-                    <a href="/client/<%= client.id %>/send-to-dder" class="cta-button">Transmettre la fiche à DDER</a>
+                    <button class="cta-button" onclick="confirmSendToDDER()">Transmettre la fiche à DDER</button>
                     <% } %>
                 </div>
                 <form id="clientForm" action="/client/<%= client.id %>/edit" method="POST" enctype="multipart/form-data" style="display: none;">
@@ -122,8 +122,8 @@
                             <textarea id="notes" name="notes"><%= client.notes %></textarea>
                         </div>
                         <div class="unique-form-group">
-                            <label for="status">Statut fiche client</label>
-                            <select id="status" name="status" required>
+                            <label for="statutClient">Statut fiche client</label>
+                            <select id="statutClient" name="statutClient" required>
                                 <option value="validée" <%= client.statutClient === 'validée' ? 'selected' : '' %>>Validée</option>
                                 <option value="en attente" <%= client.statutClient === 'en attente' ? 'selected' : '' %>>En attente</option>
                                 <option value="refusée" <%= client.statutClient === 'refusée' ? 'selected' : '' %>>Refusée</option>
@@ -143,6 +143,11 @@
                     </div>
                     <button type="submit" id="saveButton" class="unique-submit-btn">Mettre à jour le client</button>
                 </form>
+                <div id="sendToDDERConfirmation" style="display: none; margin-top: 20px;">
+                    <p>Êtes-vous sûr de vouloir transmettre la fiche à DDER ?</p>
+                    <button class="cta-button" onclick="sendToDDER('<%= client.id %>')">Confirmer</button>
+                    <button class="cta-button" onclick="cancelSendToDDER()">Annuler</button>
+                </div>
                 <div id="clientDetails" class="toastBox alertingBlue" style="padding-right: 10px;padding-left: 15px;">
                     <div >
                         <h2>
@@ -250,5 +255,17 @@
         } else {
             alert('Email du commercial incorrect.');
         }
+    }
+
+    function confirmSendToDDER() {
+        document.getElementById('sendToDDERConfirmation').style.display = 'block';
+    }
+
+    function cancelSendToDDER() {
+        document.getElementById('sendToDDERConfirmation').style.display = 'none';
+    }
+
+    function sendToDDER(clientId) {
+        window.location.href = `/client/${clientId}/send-to-dder`;
     }
 </script>
