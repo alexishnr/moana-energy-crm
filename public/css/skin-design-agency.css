@@ -58,6 +58,7 @@ body,
 	background-color: #000;
 }
 
+
 /* greyscale */
 .wrapper-inner{
 	-webkit-filter: none;
@@ -3573,7 +3574,18 @@ only screen and (				min-resolution: 2dppx) {
 		overflow: scroll;
 
 	}
-
+	button {
+		display: inline-block;
+		padding: 12px 24px;
+		color: #666666;
+		font-size: 16px;
+		font-weight: bold;
+		text-align: center;
+		text-decoration: none;
+		border-radius: 5px;
+		transition: background-color 0.3s ease, transform 0.3s ease;
+		}
+		
 	.cta-button {
 		display: inline-block;
 		padding: 12px 24px;
@@ -3979,43 +3991,7 @@ only screen and (				min-resolution: 2dppx) {
 	}
 }
 
-@media only screen and (max-width: 768px){
-	.other-bg{
-		height:auto; 
-		width:auto
-	}
-	.hero-5{
-		padding-top:0px !important;
-		padding-bottom:20px !important;
 
-	}
-	input[type="text"], input[type="date"], input[type="email"],input[type="tel"],input[type="password"],input[type="number"], select {
-		max-width: unset;
-	}
-	.youtubeVideoMobile{
-		display: block;
-	}
-	.youtubeVideoDesktop{
-		display: none;
-	}
-	.notification-bubble-mobile {
-		display: block;
-		background-color: #0D47A1;
-		color: white;
-		border-radius: 50%;
-		padding: 2px 6px;
-		font-size: 10px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 20px;
-		height: 20px;
-		margin-left: 5px;
-		position: absolute;
-		top: 10px!important;
-		right: 0!important;
-	}
-	}
 
 
 
@@ -4056,3 +4032,43 @@ select {
 .chatbot-input{
 	max-width: unset!important;
 }
+
+@media only screen and (max-width: 768px){
+	.other-bg{
+		height:auto; 
+		width:auto
+	}
+	.hero-5{
+		padding-top:0px !important;
+		padding-bottom:20px !important;
+
+	}
+	input[type="text"], input[type="date"], input[type="email"],input[type="tel"],input[type="password"],input[type="number"], select {
+		max-width: unset;
+	}
+	.youtubeVideoMobile{
+		display: block;
+	}
+	.youtubeVideoDesktop{
+		display: none;
+	}
+	.notification-bubble-mobile {
+		display: block;
+		background-color: #0D47A1;
+		color: white;
+		border-radius: 50%;
+		padding: 2px 6px;
+		font-size: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		margin-left: 5px;
+		position: absolute;
+		top: 10px!important;
+		right: 0!important;
+	}
+	}
+
+	

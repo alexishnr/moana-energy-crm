@@ -1,15 +1,33 @@
-<h2><%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></h2>
-<p><strong>Type de client:</strong> <%= client.type_client.charAt(0).toUpperCase() + client.type_client.slice(1) %></p>
-<% if (client.type_client === 'professionnel') { %>
-    <p><strong>Raison sociale:</strong> <%= client.raison_sociale %></p>
-<% } %>
-<p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %>, <%= client.code_postal %></p>
-<p><strong>Email:</strong> <%= client.email %></p>
-<p><strong>Téléphone:</strong> <%= client.telephone %></p>
-<p><strong>Superficie:</strong> <%= client.superficie %> m²</p>
-<p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
-<p><strong>Statut travaux:</strong> <%= client.statutTravaux.charAt(0).toUpperCase() + client.statutTravaux.slice(1) %></p>
-<p><strong>Statut fiche:</strong> <%= client.statutClient.charAt(0).toUpperCase() + client.statutClient.slice(1) %></p>
-<p class="type_renovation"><strong>Type de rénovation:</strong> <%= client.type_renovation.join(', ').charAt(0).toUpperCase() + client.type_renovation.join(', ').slice(1) %></p>
-<p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+<div class="client-summary">
+    <h2><%= client.nom.charAt(0).toUpperCase() + client.nom.slice(1) %> <%= client.prenom.charAt(0).toUpperCase() + client.prenom.slice(1) %></h2>
+    <p><strong>Type de client:</strong> <%= client.type_client.charAt(0).toUpperCase() + client.type_client.slice(1) %></p>
+    <% if (client.type_client === 'professionnel') { %>
+        <p><strong>Raison sociale:</strong> <%= client.raison_sociale %></p>
+    <% } %>
+    <p><strong>Adresse:</strong> <%= client.adresse.charAt(0).toUpperCase() + client.adresse.slice(1) %>, <%= client.ville.charAt(0).toUpperCase() + client.ville.slice(1) %>, <%= client.code_postal %></p>
+</div>
+<div class="client-details" style="display: none;">
+    <p><strong>Email:</strong> <%= client.email %></p>
+    <p><strong>Téléphone:</strong> <%= client.telephone %></p>
+    <p><strong>Superficie:</strong> <%= client.superficie %> m²</p>
+    <p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
+    <p><strong>Statut travaux:</strong> <%= client.statutTravaux.charAt(0).toUpperCase() + client.statutTravaux.slice(1) %></p>
+    <p><strong>Statut fiche:</strong> <%= client.statutClient.charAt(0).toUpperCase() + client.statutClient.slice(1) %></p>
+    <p class="type_renovation"><strong>Type de rénovation:</strong> <%= (Array.isArray(client.type_renovation) ? client.type_renovation : (client.type_renovation ? [client.type_renovation] : [])).join(', ').charAt(0).toUpperCase() + (Array.isArray(client.type_renovation) ? client.type_renovation : (client.type_renovation ? [client.type_renovation] : [])).join(', ').slice(1) %></p>
+    <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
+</div>
+<button onclick="toggleDetails(this)">Voir plus</button>
 <a href="/client/<%= client.id %>" class="cta-button">Voir la fiche client</a>
+
+<script>
+    function toggleDetails(button) {
+        const details = button.previousElementSibling;
+        if (details.style.display === 'none') {
+            details.style.display = 'block';
+            button.textContent = 'Voir moins';
+        } else {
+            details.style.display = 'none';
+            button.textContent = 'Voir plus';
+        }
+    }
+</script>

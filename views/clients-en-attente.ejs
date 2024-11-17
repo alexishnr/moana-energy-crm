@@ -39,7 +39,7 @@
                         <select id="filterTypeRenovation" onchange="filterClients()">
                             <option value="">Filtrer par type de rénovation</option>
                             <% 
-                            const uniqueTypes = [...new Set(clients.flatMap(client => client.type_renovation))];
+                            const uniqueTypes = [...new Set(clients.flatMap(client => Array.isArray(client.type_renovation) ? client.type_renovation : (client.type_renovation ? [client.type_renovation] : [])))];
                             uniqueTypes.forEach(typeRenovation => { 
                             %>
                                 <option value="<%= typeRenovation %>"><%= typeRenovation %></option>

@@ -26,7 +26,7 @@
         </nav>
     </div>
     <section class="section-block">
-        <div class="row">
+        <div class="container">
             <% if (typeof success !== 'undefined') { %>
                 <% if (success) { %>
                     <div class="toastBox alertingGreen">
@@ -41,96 +41,110 @@
             <div class="column width-12">
                 <div style="margin-bottom: 50px;">
                     <% if (isSuperUser) { %>
-                        <a id="editButton" style="margin: 0;" class="cta-button" onclick="toggleEditMode()">Modifier</a>
+                        <a id="editButton" style="margin: 0;margin-bottom: 5px;" class="cta-button" onclick="toggleEditMode()">Modifier la fiche</a>
                     <% } %>
-                    <a href="/client/<%= client.id %>/schedule" class="cta-button">Programmer un rendez-vous</a>
+                    <% if (client.statutClient !== 'en attente') { %>
+                    <a href="/client/<%= client.id %>/schedule" class="cta-button" style="margin: 0;margin-bottom: 5px;">Programmer un rendez-vous</a>
                     <a href="/client/<%= client.id %>/send-to-dder" class="cta-button">Transmettre la fiche à DDER</a>
+                    <% } %>
                 </div>
                 <form id="clientForm" action="/client/<%= client.id %>/edit" method="POST" enctype="multipart/form-data" style="display: none;">
-                    <div class="unique-form-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" id="nom" name="nom" value="<%= client.nom %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="prenom">Prénom</label>
-                        <input type="text" id="prenom" name="prenom" value="<%= client.prenom %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="adresse">Adresse</label>
-                        <input type="text" id="adresse" name="adresse" value="<%= client.adresse %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="ville">Ville</label>
-                        <input type="text" id="ville" name="ville" value="<%= client.ville %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="code_postal">Code Postal</label>
-                        <input type="text" id="code_postal" name="code_postal" value="<%= client.code_postal %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="type_renovation">Type de rénovation souhaitée</label>
-                        <input type="text" id="type_renovation" name="type_renovation" value="<%= client.type_renovation %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="<%= client.email %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="telephone">Téléphone</label>
-                        <input type="tel" id="telephone" name="telephone" value="<%= client.telephone %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="superficie">Superficie</label>
-                        <input type="text" id="superficie" name="superficie" value="<%= client.superficie %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="type_batiment">Type de bâtiment</label>
-                        <input type="text" id="type_batiment" name="type_batiment" value="<%= client.type_batiment %>" required>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="photos">Photos</label>
-                        <input type="file" id="photos" name="photos" multiple>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="notes">Notes supplémentaires</label>
-                        <textarea id="notes" name="notes"><%= client.notes %></textarea>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="status">Statut fiche client</label>
-                        <select id="status" name="status" required>
-                            <option value="validée" <%= client.statutClient === 'validée' ? 'selected' : '' %>>Validée</option>
-                            <option value="en attente" <%= client.statutClient === 'en attente' ? 'selected' : '' %>>En attente</option>
-                            <option value="refusée" <%= client.statutClient === 'refusée' ? 'selected' : '' %>>Refusée</option>
-                            <option value="fiche transmise" <%= client.statutClient === 'fiche transmise' ? 'selected' : '' %>>Fiche transmise</option>
-                        </select>
-                    </div>
-                    <div class="unique-form-group">
-                        <label for="statutTravaux">Statut des travaux</label>
-                        <select id="statutTravaux" name="statutTravaux" required>
-                            <option value="premier contact" <%= client.statutTravaux === 'premier contact' ? 'selected' : '' %>>Premier contact</option>
-                            <option value="rendez-vous planifié" <%= client.statutTravaux === 'rendez-vous planifié' ? 'selected' : '' %>>Rendez-vous planifié</option>
-                            <option value="visite technique effectuée" <%= client.statutTravaux === 'visite technique effectuée' ? 'selected' : '' %>>Visite technique effectuée</option>
-                            <option value="travaux en cours" <%= client.statutTravaux === 'travaux en cours' ? 'selected' : '' %>>Travaux en cours</option>
-                            <option value="travaux complétés" <%= client.statutTravaux === 'travaux complétés ' ? 'selected' : '' %>>Travaux complétés </option>
-                        </select>
-                    </div>
+                    <!-- Type de client -->
                     <div class="unique-form-group">
                         <label for="type_client">Type de client</label>
-                        <select id="type_client" name="type_client" required>
+                        <select id="type_client" name="type_client" onchange="toggleFields()" required>
                             <option value="professionnel" <%= client.type_client === 'professionnel' ? 'selected' : '' %>>Professionnel</option>
                             <option value="particulier" <%= client.type_client === 'particulier' ? 'selected' : '' %>>Particulier</option>
                         </select>
                     </div>
-                    <% if (client.type_client === 'professionnel') { %>
+
+                    <!-- Champ raison sociale (masqué par défaut) -->
+                    <div class="unique-form-group" id="raison_sociale_group" style="display: <%= client.type_client === 'professionnel' ? 'block' : 'none' %>;">
+                        <label for="raison_sociale">Raison sociale</label>
+                        <input type="text" id="raison_sociale" name="raison_sociale" value="<%= client.raison_sociale %>">
+                    </div>
+
+                    <!-- Autres champs -->
+                    <div id="form_fields">
                         <div class="unique-form-group">
-                            <label for="raison_sociale">Raison sociale</label>
-                            <input type="text" id="raison_sociale" name="raison_sociale" value="<%= client.raison_sociale %>">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" name="nom" value="<%= client.nom %>" required>
                         </div>
-                    <% } %>
+                        <div class="unique-form-group">
+                            <label for="prenom">Prénom</label>
+                            <input type="text" id="prenom" name="prenom" value="<%= client.prenom %>" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="adresse">Adresse</label>
+                            <input type="text" id="adresse" name="adresse" value="<%= client.adresse %>" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="ville">Ville</label>
+                            <input type="text" id="ville" name="ville" value="<%= client.ville %>" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="code_postal">Code Postal</label>
+                            <input type="number" id="code_postal" name="code_postal" value="<%= client.code_postal %>" minlength="5" maxlength="5" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="type_renovation">Type de rénovation souhaitée</label>
+                            <div id="type_renovation">
+                                <div style="display: flex;align-items: center;"><label>Calorifugeage</label><input type="checkbox" name="type_renovation[]" value="calorifugeage" class="checkboxForm" <%= client.type_renovation.includes('calorifugeage') ? 'checked' : '' %>></div>
+                                <div style="display: flex;white-space:nowrap;align-items: center;"><label>Point singulier</label><input type="checkbox" name="type_renovation[]" value="point singulier" class="checkboxForm" <%= client.type_renovation.includes('point singulier') ? 'checked' : '' %>></div>
+                            </div>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="<%= client.email %>" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone" value="<%= client.telephone %>" required pattern="[0-9]{10}" title="Veuillez entrer un numéro de téléphone valide (10 chiffres).">
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="superficie">Superficie (m²)</label>
+                            <input type="number" id="superficie" name="superficie" value="<%= client.superficie %>" min="1" required>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="type_batiment">Type de bâtiment</label>
+                            <select id="type_batiment" name="type_batiment" required>
+                                <option value="tertiaire" <%= client.type_batiment === 'tertiaire' ? 'selected' : '' %>>Tertiaire</option>
+                                <option value="residence" <%= client.type_batiment === 'residence' ? 'selected' : '' %>>Bâtiment résidentiel</option>
+                                <option value="maison" <%= client.type_batiment === 'maison' ? 'selected' : '' %>>Maison</option>
+                            </select>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="photos">Photos</label>
+                            <input type="file" id="photos" name="photos" multiple>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="notes">Notes supplémentaires</label>
+                            <textarea id="notes" name="notes"><%= client.notes %></textarea>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="status">Statut fiche client</label>
+                            <select id="status" name="status" required>
+                                <option value="validée" <%= client.statutClient === 'validée' ? 'selected' : '' %>>Validée</option>
+                                <option value="en attente" <%= client.statutClient === 'en attente' ? 'selected' : '' %>>En attente</option>
+                                <option value="refusée" <%= client.statutClient === 'refusée' ? 'selected' : '' %>>Refusée</option>
+                                <option value="fiche transmise" <%= client.statutClient === 'fiche transmise' ? 'selected' : '' %>>Fiche transmise</option>
+                            </select>
+                        </div>
+                        <div class="unique-form-group">
+                            <label for="statutTravaux">Statut des travaux</label>
+                            <select id="statutTravaux" name="statutTravaux" required>
+                                <option value="premier contact" <%= client.statutTravaux === 'premier contact' ? 'selected' : '' %>>Premier contact</option>
+                                <option value="rendez-vous planifié" <%= client.statutTravaux === 'rendez-vous planifié' ? 'selected' : '' %>>Rendez-vous planifié</option>
+                                <option value="visite technique effectuée" <%= client.statutTravaux === 'visite technique effectuée' ? 'selected' : '' %>>Visite technique effectuée</option>
+                                <option value="travaux en cours" <%= client.statutTravaux === 'travaux en cours' ? 'selected' : '' %>>Travaux en cours</option>
+                                <option value="travaux complétés" <%= client.statutTravaux === 'travaux complétés ' ? 'selected' : '' %>>Travaux complétés </option>
+                            </select>
+                        </div>
+                    </div>
                     <button type="submit" id="saveButton" class="unique-submit-btn">Mettre à jour le client</button>
                 </form>
-                <div class="toastBox alertingBlue">
-                    <div id="clientDetails">
+                <div id="clientDetails" class="toastBox alertingBlue" style="padding-right: 10px;padding-left: 15px;">
+                    <div >
                         <h2>
                             <% if (client.type_client === 'professionnel') { %>
                                 <%= client.raison_sociale %>
@@ -150,7 +164,7 @@
                         <p><strong>Téléphone:</strong> <%= client.telephone %></p>
                         <p><strong>Superficie:</strong> <%= client.superficie.charAt(0).toUpperCase() + client.superficie.slice(1) %></p>
                         <p><strong>Type de bâtiment:</strong> <%= client.type_batiment.charAt(0).toUpperCase() + client.type_batiment.slice(1) %></p>
-                        <p><strong>Type de rénovation:</strong> <%= client.type_renovation.map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') %></p>
+                        <p><strong>Type de rénovation:</strong> <%= (Array.isArray(client.type_renovation) ? client.type_renovation : (client.type_renovation ? [client.type_renovation] : [])).map(type => type.charAt(0).toUpperCase() + type.slice(1)).join(', ') %></p>
                         <p><strong>Statut fiche client:</strong> <%= client.statutClient.charAt(0).toUpperCase() + client.statutClient.slice(1) %></p>
                         <p><strong>Statut des travaux:</strong> <%= client.statutTravaux.charAt(0).toUpperCase() + client.statutTravaux.slice(1) %></p>
                         <p><strong>Notes supplémentaires:</strong> <%= client.notes.charAt(0).toUpperCase() + client.notes.slice(1) %></p>
@@ -161,13 +175,24 @@
                             <% }) %>
                         </div>
                         <p><strong>Date de création:</strong> <%= new Date(client.createdAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></p>
-                        <div class="toastBox">
+                        <div class="toastBox" id="commercialBox" style="padding-right: 10px;padding-left: 10px;">
                             <h3>Informations commercial</h3>
                             <p><strong>Nom du commercial:</strong> <%= client.nomCommercial %></p>
                             <p><strong>Email du commercial:</strong> <%= client.emailCommercial %></p>
-                            <p><strong>Téléphone du commercial:</strong> <%= client.telephonphoneCommercial %></p>
+                            <p><strong>Téléphone du commercial:</strong> <%= client.telephoneCommercial %></p>
                         </div>
                     </div>
+                    <% if (isSuperUser) { %>
+                        <div style="margin-top: 20px;">
+                            <button id="deleteButton" class="cta-button" style="background-color: rgb(237, 41, 41);" onclick="confirmDelete()">Supprimer le client</button>
+                        </div>
+                        <div id="deleteConfirmation" style="display: none; margin-top: 20px;">
+                            <p>Veuillez entrer l'email du commercial pour confirmer la suppression :</p>
+                            <input type="email" id="confirmEmail" placeholder="Email du commercial">
+                            <button class="cta-button" style="background-color: rgb(237, 41, 41);" onclick="deleteClient('<%= client.id %>')">Confirmer la suppression</button>
+                            <button class="cta-button" onclick="cancelDelete()">Annuler</button>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -179,5 +204,51 @@
         document.getElementById('clientForm').style.display = 'block';
         document.getElementById('clientDetails').style.display = 'none';
         document.getElementById('editButton').style.display = 'none';
+    }
+
+    function toggleFields() {
+        const typeClient = document.getElementById('type_client').value;
+        const raisonSocialeGroup = document.getElementById('raison_sociale_group');
+
+        if (typeClient === 'professionnel') {
+            raisonSocialeGroup.style.display = 'block';
+        } else {
+            raisonSocialeGroup.style.display = 'none';
+        }
+    }
+
+    function confirmDelete() {
+        document.getElementById('deleteButton').style.display = 'none';
+        document.getElementById('deleteConfirmation').style.display = 'block';
+    }
+
+    function cancelDelete() {
+        document.getElementById('deleteButton').style.display = 'block';
+        document.getElementById('deleteConfirmation').style.display = 'none';
+    }
+
+    async function deleteClient(clientId) {
+        const confirmEmail = document.getElementById('confirmEmail').value;
+        const commercialEmail = '<%= client.emailCommercial %>';
+
+        if (confirmEmail === commercialEmail) {
+            try {
+                const response = await fetch(`/client/${clientId}/delete`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    alert('Client supprimé avec succès.');
+                    window.location.href = '/clients';
+                } else {
+                    alert('Erreur lors de la suppression du client.');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la suppression du client.');
+            }
+        } else {
+            alert('Email du commercial incorrect.');
+        }
     }
 </script>

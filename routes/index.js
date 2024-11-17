@@ -48,7 +48,7 @@ router.use(async (req, res, next) => {
   res.locals.pendingClientsCount = 0; // Initialiser la variable
   if (req.session.isSuperUser) {
     try {
-      const pendingClientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
+      const pendingClientsSnapshot = await db.collection('clients').where('statutClient', '==', 'en attente').get();
       res.locals.pendingClientsCount = pendingClientsSnapshot.size;
     } catch (error) {
       console.error('Erreur lors de la récupération des clients en attente:', error);
@@ -273,7 +273,7 @@ router.get('/client/:id/send-to-dder', isAuthenticated, async function(req, res,
 // Route pour modifier un client
 router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('photos', 10), async function(req, res, next) {
   const clientId = req.params.id;
-  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, statutTravaux } = req.body;
+  const { nom, prenom, adresse, ville, code_postal, type_renovation, notes, email, telephone, superficie, type_batiment, status, statutTravaux, nomCommercial, emailCommercial, telephoneCommercial } = req.body;
   const photos = req.files.map(file => file.path); // Récupérer les chemins des fichiers téléchargés
   try {
     // Mettre à jour le client dans Firestore
@@ -292,12 +292,29 @@ router.post('/client/:id/edit', isAuthenticated, isSuperUser, upload.array('phot
       photos,
       status,
       statutTravaux,
+      nomCommercial,
+      emailCommercial,
+      telephoneCommercial,
       updatedAt: new Date().toISOString() // Stocker la date en format ISO
     });
     res.redirect(`/client/${clientId}?success=true`);
   } catch (error) {
     console.error('Erreur lors de la mise à jour du client:', error);
     res.redirect(`/client/${clientId}?success=false`);
+  }
+});
+
+// Route pour supprimer un client
+router.delete('/client/:id/delete', isAuthenticated, isSuperUser, async function(req, res, next) {
+  const clientId = req.params.id;
+
+  try {
+    // Supprimer le client de Firestore
+    await db.collection('clients').doc(clientId).delete();
+    res.status(200).send('Client supprimé avec succès.');
+  } catch (error) {
+    console.error('Erreur lors de la suppression du client:', error);
+    res.status(500).send('Erreur lors de la suppression du client.');
   }
 });
 
@@ -319,7 +336,7 @@ async function isSuperUser(req, res, next) {
 // Page pour afficher la liste des clients en attente
 router.get('/clients-en-attente', isAuthenticated, isSuperUser, async function(req, res, next) {
   try {
-    const clientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
+    const clientsSnapshot = await db.collection('clients').where('statutClient', '==', 'en attente').get();
     const clients = clientsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     

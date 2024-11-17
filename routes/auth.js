@@ -22,7 +22,7 @@ router.use(async (req, res, next) => {
   res.locals.pendingClientsCount = 0; // Initialiser la variable
   if (req.session.isSuperUser) {
     try {
-      const pendingClientsSnapshot = await db.collection('clients').where('status', '==', 'en attente').get();
+      const pendingClientsSnapshot = await db.collection('clients').where('statutClient', '==', 'en attente').get();
       res.locals.pendingClientsCount = pendingClientsSnapshot.size;
     } catch (error) {
       console.error('Erreur lors de la récupération des clients en attente:', error);
