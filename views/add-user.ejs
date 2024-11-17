@@ -42,18 +42,60 @@
                     <input type="email" id="email" name="email" required>
                     <label for="email">Téléphone:</label>
                     <input type="tel" id="telephone" name="telephone" required>
-                    <label for="expirationDate">Date d'expiration:</label>
-                    <input type="date" id="expirationDate" name="expirationDate" required>
                     <label for="isSuperUser">Super Utilisateur:</label>
-                    <select id="isSuperUser" name="isSuperUser">
+                    <select id="isSuperUser" name="isSuperUser" onchange="toggleExpirationDate()">
                         <option value="false">Non</option>
                         <option value="true">Oui</option>
                     </select>
-                    <div>
-                        <button type="submit" class="cta-button uniform-button" style="margin-top: 30px;">Ajouter</button>
+                    <label for="expirationDate">Date d'expiration:</label>
+                    <input type="date" id="expirationDate" name="expirationDate" required>
+                    <div id="superUserConfirmation" style="display: none; margin-top: 10px;">
+                        <p>Un super utilisateur a accès à toutes les fonctionnalités. Voulez-vous continuer ?</p>
+                        <button type="button" class="cta-button uniform-button" onclick="confirmSuperUser()">Confirmer</button>
+                        <button type="button" class="cta-button uniform-button" onclick="cancelSuperUser()">Annuler</button>
+                    </div>
+                    <div id="submitButtonContainer">
+                        <button type="submit" id="submitButton" class="cta-button uniform-button" style="margin-top: 30px;">Ajouter</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function toggleExpirationDate() {
+        const isSuperUser = document.getElementById('isSuperUser').value;
+        const expirationDate = document.getElementById('expirationDate');
+        const superUserConfirmation = document.getElementById('superUserConfirmation');
+        const submitButtonContainer = document.getElementById('submitButtonContainer');
+
+        if (isSuperUser === 'true') {
+            expirationDate.disabled = true;
+            superUserConfirmation.style.display = 'block';
+            submitButtonContainer.style.display = 'none';
+        } else {
+            expirationDate.disabled = false;
+            superUserConfirmation.style.display = 'none';
+            submitButtonContainer.style.display = 'block';
+        }
+    }
+
+    function confirmSuperUser() {
+        const superUserConfirmation = document.getElementById('superUserConfirmation');
+        const submitButtonContainer = document.getElementById('submitButtonContainer');
+        superUserConfirmation.style.display = 'none';
+        submitButtonContainer.style.display = 'block';
+    }
+
+    function cancelSuperUser() {
+        const isSuperUser = document.getElementById('isSuperUser');
+        const expirationDate = document.getElementById('expirationDate');
+        const superUserConfirmation = document.getElementById('superUserConfirmation');
+        const submitButtonContainer = document.getElementById('submitButtonContainer');
+
+        isSuperUser.value = 'false';
+        expirationDate.disabled = false;
+        superUserConfirmation.style.display = 'none';
+        submitButtonContainer.style.display = 'block';
+    }
+</script>

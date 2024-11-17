@@ -2,15 +2,22 @@ const { getFirestore } = require('firebase-admin/firestore');
 const db = getFirestore();
 
 async function isAuthenticated(req, res, next) {
-
-  console.log(req.session.userId,'auth@@@@@@@@@@');
-
   if (req.session && req.session.userId) {
-    console.log("authenticated");
-    
-    req.session._garbage = Date();
-    req.session.touch();
-    return next();
+    const userDoc = await db.collection('users').doc(req.session.userId).get();
+    if (userDoc.exists) {
+      const user = userDoc.data();
+      const today = new Date();
+
+      if (user.isSuperUser || new Date(user.expirationDate) >= today) {
+        console.log("authenticated");
+        req.session._garbage = Date();
+        req.session.touch();
+        return next();
+      } else {
+        console.log("account expired");
+        return res.redirect('/auth/login?message=Votre compte a expiré.');
+      }
+    }
   }
   console.log("not authenticated");
   res.redirect('/auth/login');
