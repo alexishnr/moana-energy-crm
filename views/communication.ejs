@@ -1,0 +1,42 @@
+
+<div class="content clearfix">
+    <div class="intro-title-dark-bg">
+        <div class="row">
+            <div class="column width-10 offset-1 center">
+                <div class="title-container">
+                    <div class="title-container-inner color-white">
+                        <h1 class="title-large mb-30">Communication</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="section-block">
+        <div class="row">
+            <div class="column width-12">
+                <% if (typeof success !== 'undefined') { %>
+                    <% if (success === true) { %>
+                        <div class="toastBox alertingGreen">
+                            <%= message %>
+                        </div>
+                    <% } else if(success === false) { %>
+                        <div class="toastBox alertingRed">
+                            Erreur lors de l'action : <%= message %>
+                        </div>
+                    <% } %>
+                <% } %>
+                <form action="/dashboard/communication" method="post">
+                    <div>
+                        <label for="consignes">Consignes :</label>
+                        <textarea id="consignes" name="consignes" required></textarea>
+                    </div>
+                    <div>
+                        <label for="objectifs">Objectifs :</label>
+                        <textarea id="objectifs" name="objectifs" required></textarea>
+                    </div>
+                    <button type="submit" class="cta-button">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>

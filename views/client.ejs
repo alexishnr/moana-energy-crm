@@ -193,7 +193,7 @@
                         <div class="toastBox" id="commercialBox" style="padding-right: 10px;padding-left: 10px;">
                             <h3>Informations commercial</h3>
                             <p><strong>Nom du commercial :</strong> <%= client.nomCommercial %></p>
-                            <p><strong>Email du commercia l:</strong> <%= client.emailCommercial %></p>
+                            <p><strong>Email du commercial :</strong> <%= client.emailCommercial %></p>
                             <p><strong>Téléphone du commercial :</strong> <%= client.telephoneCommercial %></p>
                         </div>
                     </div>
@@ -202,7 +202,7 @@
                             <button id="deleteButton" class="cta-button uniform-button" style="background-color: #666666;" onclick="confirmDelete()">Supprimer le client</button>
                         </div>
                         <div id="deleteConfirmation" style="display: none; margin-top: 20px;">
-                            <p>Veuillez entrer l'email du commercial pour confirmer la suppression :</p>
+                            <p>Veuillez entrer l'email du commercial pour confirmer la suppression (<%= client.emailCommercial %>) :</p>
                             <input type="email" id="confirmEmail" placeholder="Email du commercial">
                             <button class="cta-button uniform-button" style="background-color: rgb(237, 41, 41);" onclick="deleteClient('<%= client.id %>')">Confirmer la suppression</button>
                             <button class="cta-button uniform-button" onclick="cancelDelete()">Annuler</button>

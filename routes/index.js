@@ -74,7 +74,7 @@ router.post('/add-client', isAuthenticated, upload.array('photos', 10), async fu
 
   try {
     // Ajouter le client à Firestore
-    await db.collection('clients').add({
+    const docRef = await db.collection('clients').add({
       type_client,
       raison_sociale: type_client === 'professionnel' ? raison_sociale : null,
       nom,
@@ -97,6 +97,9 @@ router.post('/add-client', isAuthenticated, upload.array('photos', 10), async fu
       telephoneCommercial: req.session.userPhone, // Ajouter l'email de l'utilisateur connecté
       nomCommercial: req.session.userDisplayName // Ajouter le nom de l'utilisateur connecté
     });
+
+    docRef.update({ id: docRef.id });
+
     res.render('add-clients', { success: true, pendingClientsCount: res.locals.pendingClientsCount });
   } catch (error) {
     console.error('Erreur lors de l\'ajout du client:', error);

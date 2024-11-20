@@ -29,7 +29,7 @@ const db = admin.firestore();
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
-
+var dashboardRouter = require('./routes/dashboard');
 var app = express();
 const ejsLayout = require("express-ejs-layouts");
 
@@ -82,6 +82,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/auth', authRouter);
+app.use('/dashboard', dashboardRouter);
 
 // Middleware pour vérifier si l'utilisateur est authentifié
 function isAuthenticated(req, res, next) {

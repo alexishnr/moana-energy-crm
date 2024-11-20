@@ -1,0 +1,188 @@
+<div class="content clearfix">
+  <!-- Titre principal -->
+  <div class="intro-title-dark-bg">
+    <div class="row">
+      <div class="column width-10 offset-1 center">
+        <div class="title-container">
+          <div class="title-container-inner color-white">
+            <h1 class="title-medium mb-30" style="font-size: 3em;">Bienvenue sur votre dashboard <%= userData.prenom %></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section principale -->
+  <div class="dark-mode" style="padding: 50px 0;">
+    <div class="container">
+
+      <!-- Communication de Moana Energy -->
+      <section id="communication">
+        <h2>Communication de Moana Energy</h2>
+        <% stats.communication.forEach(communication => { %>
+          <div class="col-sm-3">
+            <div class="toastBox alertingBlue">
+              <ul>
+                <li><strong>Objectifs :</strong> <%= communication.objectifs %></li>
+                <li><strong>Consignes :</strong> <%= communication.consignes %></li>
+              </ul>
+            </div>
+          </div>
+        <% }) %>
+      </section>
+
+      <!-- Statistiques -->
+      <section id="stats">
+        <h2>Statistiques</h2>
+        <div class="rowBootstrap">
+          <div class="toastBox col-sm-3">
+            <h3>Total Clients</h3>
+            <p id="totalClients"><%= stats.totalClients.length  || 0 %></p>
+          </div>
+          <div class="toastBox col-sm-3">
+            <h3>Clients Validés</h3>
+            <p id="validatedClients"><%= stats.totalClientsValidated.length  || 0 %></p>
+          </div>
+          <div class="toastBox col-sm-3">
+            <h3>Fiches Transmises</h3>
+            <p id="transmittedClients"><%= stats.totalClientsSent.length  || 0 %></p>
+          </div>
+          <div class="toastBox col-sm-3">
+            <h3>Rendez-vous plannifiés</h3>
+            <p id="appointmentPlanned"><%= stats.appointments.length  || 0 %></p>
+        </div>
+          <div class="toastBox col-sm-3">
+              <h3>Travaux complétés</h3>
+              <p id="refusedClients"><%= stats.totalClientsDone.length  || 0 %></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tâches -->
+      <section id="tasks">
+        <h2>Tâches</h2>
+        <ul id="taskList">
+          <% stats.tasks.forEach(task => { %>
+            <li class="toastBox alertingBlue" data-id="<%= task.id %>">
+              <strong><%= task.title %></strong> - 
+              Échéance : <%= task.dueDate %> - Priorité : <%= task.priority %>
+              <button onclick="deleteTask('<%= task.id %>')">Supprimer</button>
+            </li>
+          <% }) %>
+          <% if (!stats.tasks.length) { %>
+            <li class="toastBox alertingBlue" style="list-style: none;">Aucune tâche pour le moment.</li>
+          <% } %>
+        </ul>
+        <button id="addTaskBtn">Ajouter une tâche</button>
+        <div id="addTaskForm" style="display: none;">
+          <form action="/dashboard/add-task" method="post">
+            <div>
+              <label for="title">Titre :</label>
+              <input type="text" id="title" name="title" required>
+            </div>
+            <div>
+              <label for="dueDate">Échéance :</label>
+              <input type="date" id="dueDate" name="dueDate" required>
+            </div>
+            <div>
+              <label for="priority">Priorité :</label>
+              <select id="priority" name="priority" required>
+                <option value="low">Basse</option>
+                <option value="medium">Moyenne</option>
+                <option value="high">Haute</option>
+              </select>
+            </div>
+            <button type="submit" class="cta-button">Ajouter</button>
+            <button type="button" id="cancelTaskBtn" class="cta-button">Annuler</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Rendez-vous -->
+      <section id="appointments">
+        <h2>Rendez-vous</h2>
+        <ul id="appointmentList">
+          <% stats.appointments.forEach(appointment => { %>
+              <div class="col-sm-3">
+                  <div class="toastBox alertingBlue">
+                      <ul style="list-style: none;">
+                          <li>Date : <%= new Date(appointment.date_rdv).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></li>
+                          <li>Lieu : <%= appointment.adresse %></li>
+                          <li><a href="/client/<%= appointment.id %>">Voir la fiche du client</a></li>
+                      </ul>
+                  </div>
+              </div>
+          <% }) %>
+          <% if (!stats.appointments.length) { %>
+            <li class="toastBox alertingBlue" style="list-style: none;">Aucun rendez-vous pour le moment.</li>
+          <% } %>
+        </ul>
+      </section>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Styles optimisés pour une meilleure apparence */
+  .toastBox {
+    padding: 1em;
+    border-radius: 8px;
+    margin: auto 10px;
+    margin-bottom: 1em;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 6px;
+    background: #2c2c2c;
+    color: #fff;
+  }
+
+  h2 {
+    margin-bottom: 2em;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5em;
+  }
+
+  button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #0056b3;
+  }
+
+section {
+  margin-bottom: 3em;
+}
+</style>
+
+<script>
+  // Toggle formulaire d'ajout de tâche
+  document.getElementById('addTaskBtn').addEventListener('click', () => {
+    document.getElementById('addTaskForm').style.display = 'block';
+    document.getElementById('addTaskBtn').style.display = 'none';
+  });
+
+  // Bouton annuler pour fermer le formulaire
+  document.getElementById('cancelTaskBtn').addEventListener('click', () => {
+    document.getElementById('addTaskForm').style.display = 'none';
+    document.getElementById('addTaskBtn').style.display = 'block';
+  });
+
+  // Suppression de tâche
+  function deleteTask(taskId) {
+    fetch('/dashboard/delete-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ taskId })
+    }).then(response => {
+      if (response.ok) {
+        document.querySelector(`li[data-id="${taskId}"]`).remove();
+      } else {
+        console.error('Erreur lors de la suppression de la tâche.');
+      }
+    });
+  }
+</script>

@@ -15,17 +15,24 @@
                     <li class="current">
                         <a href="/">Accueil</a>
                     </li>
+                    <li><a href="/dashboard">Dashboard</a></li>
                     <li><a href="/clients">Liste des clients</a></li>
                     <li><a href="/ajouter-client">Ajouter un client</a></li>
                     <% if (session.isSuperUser) { %>
-                        <li style="position: relative;">
-                            <a style="display: flex;" href="/clients-en-attente">Clients en attente  <% if (pendingClientsCount && pendingClientsCount > 0) { %>
-                                <span class="notification-bubble"><%= pendingClientsCount %></span>
-                                <% } %></a>
-                            
+                        <li>
+                            <a class="contains-sub-menu">Administration <%- include ./icons/carret-down.ejs %></a> 
+                                <ul class="sub-menu">
+                                    <li style="position: relative;">
+                                        <a style="display: flex;" href="/clients-en-attente">Clients en attente  <% if (pendingClientsCount && pendingClientsCount > 0) { %>
+                                            <span class="notification-bubble"><%= pendingClientsCount %></span>
+                                            <% } %></a>
+                                        
+                                    </li>
+                                <li><a href="/add-user">Ajouter un utilisateur</a></li>
+                                <li><a href="/dashboard/communication">Communication</a></li>
+                            </ul>
                         </li>
-                    <li><a href="/add-user">Ajouter un utilisateur</a></li>
-                    <% } %>
+                        <% } %>
                     <li><a href="/faq">FAQ</a></li>
                     <li><a href="/auth/logout">Déconnexion</a></li>
                 </ul>
@@ -76,15 +83,24 @@
                                 <li class="current">
                                     <a href="/">Accueil</a>
                                 </li>
+                                <li><a href="/dashboard">Dashboard</a></li>
                                 <li><a href="/clients">Liste des clients</a></li>
                                 <li><a href="/ajouter-client">Ajouter un client</a></li>
                                 <% if (session.isSuperUser) { %>
-                                <li style="position: relative;">
-                                    <a style="display: flex;" href="/clients-en-attente">Clients en attente <span class="notification-bubble"><%= pendingClientsCount %></span></a>
-                                    
-                                </li>
-                                <li><a href="/add-user">Ajouter un utilisateur</a></li>
-                                <% } %>
+                                    <li>
+                                        <a class="contains-sub-menu">Administration <%- include ./icons/carret-down.ejs %></a> 
+                                            <ul class="sub-menu">
+                                                <li style="position: relative;">
+                                                    <a style="display: flex;" href="/clients-en-attente">Clients en attente  <% if (pendingClientsCount && pendingClientsCount > 0) { %>
+                                                        <span class="notification-bubble"><%= pendingClientsCount %></span>
+                                                        <% } %></a>
+                                                    
+                                                </li>
+                                            <li><a href="/add-user">Ajouter un utilisateur</a></li>
+                                            <li><a href="/dashboard/communication">Communication</a></li>
+                                        </ul>
+                                    </li>
+                                    <% } %>
                                 <li><a href="/faq">FAQ</a></li>
                                 <li><a href="/auth/logout">Déconnexion</a></li>
                             </ul>
