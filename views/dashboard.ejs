@@ -67,7 +67,7 @@
         <ul id="appointmentList">
           <% stats.appointments.forEach(appointment => { %>
               <div class="col-sm-3">
-                  <div class="toastBox alertingBlue">
+                  <div class="toastBox alertingBlue col-sm-6">
                       <ul style="list-style: none;">
                           <li>Date : <%= new Date(appointment.date_rdv).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></li>
                           <li>Lieu : <%= appointment.adresse %></li>
@@ -87,10 +87,12 @@
         <h2>Tâches</h2>
         <ul id="taskList">
           <% stats.tasks.forEach(task => { %>
-            <li class="toastBox alertingBlue" data-id="<%= task.id %>">
-              <strong><%= task.title %></strong> - 
+            <li class="toastBox alertingBlue col-sm-6" data-id="<%= task.id %>" style="display: flex;justify-content: space-between;align-items: center;">
+              <div>
+                <strong><%= task.title %></strong> - 
               Échéance : <%= task.dueDate %> - Priorité : <%= task.priority %>
-              <button onclick="deleteTask('<%= task.id %>')">Supprimer</button>
+              </div>
+              <button style="background-color: transparent;padding: 0;" onclick="deleteTask('<%= task.id %>')"><img src="/images/assets/icons/delete.svg" alt="poubelle icone"></button>
             </li>
           <% }) %>
           <% if (!stats.tasks.length) { %>
@@ -111,9 +113,9 @@
             <div>
               <label for="priority">Priorité :</label>
               <select id="priority" name="priority" required>
-                <option value="low">Basse</option>
-                <option value="medium">Moyenne</option>
-                <option value="high">Haute</option>
+                <option value="basse">Basse</option>
+                <option value="moyenne">Moyenne</option>
+                <option value="haute">Haute</option>
               </select>
             </div>
             <button type="submit" class="cta-button">Ajouter</button>
