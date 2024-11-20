@@ -21,7 +21,7 @@
         <h2>Consignes et objectifs</h2>
         <% stats.communication.forEach(communication => { %>
           <div class="col-sm-3">
-            <div class="toastBox alertingBlue">
+            <div class="toastBox alertingBlue col-sm-3">
               <ul>
                 <li><strong>Objectifs :</strong> <%= communication.objectifs %></li>
                 <li><strong>Consignes :</strong> <%= communication.consignes %></li>
@@ -73,7 +73,7 @@
             </li>
           <% }) %>
           <% if (!stats.tasks.length) { %>
-            <li class="toastBox alertingBlue" style="list-style: none;">Aucune tâche pour le moment.</li>
+            <li class="toastBox alertingBlue col-sm-3" style="list-style: none;">Aucune tâche pour le moment.</li>
           <% } %>
         </ul>
         <button id="addTaskBtn">Ajouter une tâche</button>
@@ -117,7 +117,7 @@
               </div>
           <% }) %>
           <% if (!stats.appointments.length) { %>
-            <li class="toastBox alertingBlue" style="list-style: none;">Aucun rendez-vous pour le moment.</li>
+            <li class="toastBox alertingBlue col-sm-3" style="list-style: none;">Aucun rendez-vous pour le moment.</li>
           <% } %>
         </ul>
       </section>
