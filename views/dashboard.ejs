@@ -40,21 +40,21 @@
         <div class="rowBootstrap">
           <div class="toastBox col-sm-3">
             <h3>Total Clients</h3>
-            <p id="totalClients"><%= stats.totalClients.length  || 0 %></p>
+            <p id="totalClients weight-bold" style="font-size: large;"><%= stats.totalClients.length  || 0 %></p>
           </div>
           <div class="toastBox col-sm-3">
             <h3>Clients Validés</h3>
-            <p id="validatedClients"><%= stats.totalClientsValidated.length  || 0 %></p>
+            <p id="validatedClients weight-bold" style="font-size: large;"><%= stats.totalClientsValidated.length  || 0 %></p>
           </div>
           <div class="toastBox col-sm-3">
             <h3>Fiches Transmises</h3>
-            <p id="transmittedClients"><%= stats.totalClientsSent.length  || 0 %></p>
+            <p id="transmittedClients weight-bold" style="font-size: large;"><%= stats.totalClientsSent.length  || 0 %></p>
           </div>
-          <div class="toastBox col-sm-3">
+          <div class="toastBox col-sm-3 weight-bold" style="font-size: large;">
             <h3>Rendez-vous plannifiés</h3>
             <p id="appointmentPlanned"><%= stats.appointments.length  || 0 %></p>
         </div>
-          <div class="toastBox col-sm-3">
+          <div class="toastBox col-sm-3 weight-bold" style="font-size: large;">
               <h3>Travaux complétés</h3>
               <p id="refusedClients"><%= stats.totalClientsDone.length  || 0 %></p>
           </div>
