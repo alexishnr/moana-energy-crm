@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const clean = require('xss-clean/lib/xss').clean;
 const { isAuthenticated, isSuperUser } = require('../middleware/auth');
 const { getFirestore } = require('firebase-admin/firestore');
 const db = getFirestore();
@@ -53,7 +54,7 @@ router.get('/communication', isAuthenticated, isSuperUser, (req, res) => {
 
 // Route pour enregistrer les consignes et objectifs
 router.post('/communication', isAuthenticated, isSuperUser, async (req, res) => {
-  const { consignes, objectifs } = req.body;
+  const { consignes, objectifs } = clean(req.body);
   try {
     await db.collection('communication').add({
       consignes,
@@ -70,7 +71,7 @@ router.post('/communication', isAuthenticated, isSuperUser, async (req, res) => 
 
 // Route pour enregistrer une nouvelle tâche
 router.post('/add-task', isAuthenticated, async (req, res) => {
-  const { title, dueDate, priority } = req.body;
+  const { title, dueDate, priority } = clean(req.body);
   const userId = req.session.userId;
 
   try {
