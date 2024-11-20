@@ -29,6 +29,9 @@
             </div>
           </div>
         <% }) %>
+        <% if (!stats.communication.length) { %>
+          <li class="toastBox alertingBlue" style="list-style: none;">Aucune communication pour le moment.</li>
+        <% } %>
       </section>
 
       <!-- Statistiques -->
