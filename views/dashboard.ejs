@@ -61,6 +61,27 @@
         </div>
       </section>
 
+       <!-- Rendez-vous -->
+       <section id="appointments">
+        <h2>Rendez-vous</h2>
+        <ul id="appointmentList">
+          <% stats.appointments.forEach(appointment => { %>
+              <div class="col-sm-3">
+                  <div class="toastBox alertingBlue">
+                      <ul style="list-style: none;">
+                          <li>Date : <%= new Date(appointment.date_rdv).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></li>
+                          <li>Lieu : <%= appointment.adresse %></li>
+                          <li><a href="/client/<%= appointment.id %>">Voir la fiche du client</a></li>
+                      </ul>
+                  </div>
+              </div>
+          <% }) %>
+          <% if (!stats.appointments.length) { %>
+            <li class="toastBox alertingBlue col-sm-3" style="list-style: none;">Aucun rendez-vous pour le moment.</li>
+          <% } %>
+        </ul>
+      </section>
+
       <!-- Tâches -->
       <section id="tasks">
         <h2>Tâches</h2>
@@ -101,26 +122,6 @@
         </div>
       </section>
 
-      <!-- Rendez-vous -->
-      <section id="appointments">
-        <h2>Rendez-vous</h2>
-        <ul id="appointmentList">
-          <% stats.appointments.forEach(appointment => { %>
-              <div class="col-sm-3">
-                  <div class="toastBox alertingBlue">
-                      <ul style="list-style: none;">
-                          <li>Date : <%= new Date(appointment.date_rdv).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) %></li>
-                          <li>Lieu : <%= appointment.adresse %></li>
-                          <li><a href="/client/<%= appointment.id %>">Voir la fiche du client</a></li>
-                      </ul>
-                  </div>
-              </div>
-          <% }) %>
-          <% if (!stats.appointments.length) { %>
-            <li class="toastBox alertingBlue col-sm-3" style="list-style: none;">Aucun rendez-vous pour le moment.</li>
-          <% } %>
-        </ul>
-      </section>
     </div>
   </div>
 </div>
